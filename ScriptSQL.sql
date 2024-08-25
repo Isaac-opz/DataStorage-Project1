@@ -19,6 +19,7 @@ CREATE TABLE IF NOT EXISTS `doctic`.`categoria` (
 -- Crear la tabla `usuario`
 CREATE TABLE IF NOT EXISTS `doctic`.`usuario` (
   `id_usuario` INT NOT NULL AUTO_INCREMENT,
+  `username` VARCHAR(50) NOT NULL,
   `nombre_usuario` VARCHAR(50) NOT NULL,
   `correo_electronico` VARCHAR(150) NOT NULL,
   `ciudad` VARCHAR(100) NULL DEFAULT NULL,
@@ -26,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `doctic`.`usuario` (
   `pregunta_secreta` VARCHAR(255) NOT NULL,
   `respuesta_secreta` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_usuario`),
+  UNIQUE INDEX `username_UNIQUE` (`username` ASC) VISIBLE,
   UNIQUE INDEX `nombre_usuario` (`nombre_usuario` ASC) VISIBLE,
   UNIQUE INDEX `correo_electronico` (`correo_electronico` ASC) VISIBLE
 ) ENGINE = InnoDB
