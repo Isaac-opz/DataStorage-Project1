@@ -1,0 +1,20 @@
+package com.platform.doctic_project.Repository;
+
+import com.platform.doctic_project.Model.Comentario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.List;
+
+@Repository
+public interface ComentarioRepository extends JpaRepository<Comentario, Integer> {
+    
+    // Método para obtener todos los comentarios de un documento
+    List<Comentario> findByDocumentoId(Integer documentoId);
+
+    // Método para obtener todos los comentarios de un usuario
+    List<Comentario> findByUsuarioId(Integer usuarioId);
+
+    // Método para obtener todas las respuestas a un comentario
+    List<Comentario> findByIdMetacomentario(Integer idMetacomentario);
+}

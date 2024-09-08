@@ -1,0 +1,23 @@
+package com.platform.doctic_project.Repository;
+
+import com.platform.doctic_project.Model.Usuario;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
+
+@Repository
+public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
+    
+    // Método para encontrar un usuario por su nombre de usuario
+    Optional<Usuario> findByUsername(String username);
+    
+    // Método para encontrar un usuario por su correo electrónico
+    Optional<Usuario> findByCorreoElectronico(String correoElectronico);
+    
+    // Método para verificar si existe un usuario con un nombre de usuario específico
+    boolean existsByUsername(String username);
+    
+    // Método para verificar si existe un usuario con un correo electrónico específico
+    boolean existsByCorreoElectronico(String correoElectronico);
+}
