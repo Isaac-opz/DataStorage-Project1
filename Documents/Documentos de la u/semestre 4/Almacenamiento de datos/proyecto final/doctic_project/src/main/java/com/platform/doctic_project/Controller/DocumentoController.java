@@ -1,6 +1,6 @@
 package com.platform.doctic_project.Controller;
 
-import com.platform.doctic_project.Model.DocumentoModel;
+import com.platform.doctic_project.Model.Documento;
 import com.platform.doctic_project.Service.DocumentoService;
 import com.platform.doctic_project.Service.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
