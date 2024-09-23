@@ -105,6 +105,7 @@ CREATE TABLE IF NOT EXISTS `doctic`.`valoracion` (
   `fechavaloracion` DATE NULL,
   `id_usuario` INT NOT NULL,
   `id_documento` INT NOT NULL,
+	CONSTRAINT `chk_estrellas_range` CHECK (`estrellas` BETWEEN 1 AND 5),
   PRIMARY KEY (`id_valoracion`),
   INDEX `fk_valoracion_usuarios1_idx` (`id_usuario` ASC) VISIBLE,
   INDEX `fk_valoracion_documentos1_idx` (`id_documento` ASC) VISIBLE,
