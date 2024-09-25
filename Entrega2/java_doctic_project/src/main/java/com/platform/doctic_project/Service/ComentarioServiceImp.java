@@ -29,19 +29,23 @@ public class ComentarioServiceImp implements IComentarioService {
         Optional<Documento> documento = documentoRepository.findById(documentId);
         Optional<Usuario> usuario = usuarioRepository.findById(userId);
 
-        if (documento.isEmpty()) {
-            throw new IllegalArgumentException("Documento no encontrado.");
-        }
-
-        if (usuario.isEmpty()) {
-            throw new IllegalArgumentException("Usuario no encontrado.");
-        }
-
         Comentario comentario = new Comentario();
         comentario.setDocumento(documento.get());
         comentario.setUsuario(usuario.get());
         comentario.setComentario(content);
         return comentarioRepository.save(comentario);
+    }
+    private boolean validarUsuario(int usuarioId){
+        Optional<Usuario> usuario = usuarioRepository.findById(usuarioId);
+        return usuario.isPresent();
+    }
+    private boolean validarDocumento(int documentoId){
+        Optional<Documento> documento = documentoRepository.findById(documentoId);
+        return documento.isPresent();
+    }
+    private boolean validarComentario(int comentarioId){
+        Optional<Comentario> comentario = comentarioRepository.findById(comentarioId);
+        return comentario.isPresent();
     }
 
     // 2. Servicio para responder a un comentario existente

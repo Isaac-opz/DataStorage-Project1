@@ -35,22 +35,20 @@ public class Documento {
     @Enumerated(EnumType.STRING)
     private Visibilidad visibilidad;
 
-    @Column(name = "valoracion")
+    @Column(name = "valoracion", columnDefinition = "DECIMAL(2,1) DEFAULT 0")
     private Double valoracion;
 
     @ManyToOne
-    @JoinColumn(name = "id_categoria", nullable = false)
+    @JoinColumn(name = "Categoria_idCategoria", nullable = false)
     private Categoria categoria;
 
-    public void setUsuario(Usuario usuario) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setUsuario'");
-    }
+    // Nuevos campos para número de descargas, vistas y comentarios
+    @Column(name = "num_descargas", nullable = true, columnDefinition = "INT DEFAULT 0")
+    private Integer numDescargas;
 
-    public Object getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
-    }
+    @Column(name = "num_vistas", nullable = true, columnDefinition = "INT DEFAULT 0")
+    private Integer numVistas;
 
-    
+    @Column(name = "num_comentarios", nullable = true, columnDefinition = "INT DEFAULT 0")
+    private Integer numComentarios;
 }

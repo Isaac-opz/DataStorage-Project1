@@ -14,8 +14,7 @@ public class UsuarioServiceImp implements IUsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    
 
     // 1. Crear un nuevo usuario
     @Override
@@ -30,29 +29,6 @@ public class UsuarioServiceImp implements IUsuarioService {
         return usuarioRepository.existsByUsernameOrCorreoElectronico(username, correoElectronico);
     }
 
-    // 3. Autenticar usuario
-    @Override
-    public Optional<Usuario> authenticateUser(String username, String password) {
-        Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
-        if (usuario.isPresent() && passwordEncoder.matches(password, usuario.get().getPassword())) {
-            return usuario;
-        } else {
-            return Optional.empty();
-        }
-    }
-
-    // 4. Recuperar contraseña
-    @Override
-    public boolean recoverPassword(String username, String answerToSecurityQuestion, String newPassword) {
-        Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
-        if (usuario.isPresent() && usuario.get().getRespuestaSecreta().equals(answerToSecurityQuestion)) {
-            usuario.get().setPassword(passwordEncoder.encode(newPassword));
-            usuarioRepository.save(usuario.get());
-            return true;
-        } else {
-            return false;
-        }
-    }
 
     // 5. Actualizar usuario
     @Override
