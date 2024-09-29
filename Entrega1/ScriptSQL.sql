@@ -142,15 +142,6 @@ COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `doctic`.`Contrasena`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `doctic`.`Contrasena` (
-  `idContrasena` INT NOT NULL,
-  PRIMARY KEY (`idContrasena`))
-ENGINE = InnoDB;
-
-
--- -----------------------------------------------------
 -- Table `doctic`.`Valoracion`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `doctic`.`valoracion` (
