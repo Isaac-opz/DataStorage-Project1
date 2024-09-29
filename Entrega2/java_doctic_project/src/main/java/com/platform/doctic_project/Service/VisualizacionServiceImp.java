@@ -1,11 +1,9 @@
 package com.platform.doctic_project.Service;
 
 import com.platform.doctic_project.Model.Documento;
-import com.platform.doctic_project.Model.VistoPor;
 import com.platform.doctic_project.Model.Usuario;
-import com.platform.doctic_project.Repository.DocumentoRepository;
-import com.platform.doctic_project.Repository.VisualizacionRepository;
-import com.platform.doctic_project.Repository.UsuarioRepository;
+import com.platform.doctic_project.Model.VistoPor;
+import com.platform.doctic_project.Repository.VistoPorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,33 +14,26 @@ import java.util.List;
 public class VisualizacionServiceImp implements IVisualizacionService {
 
     @Autowired
-    private VisualizacionRepository visualizacionRepository;
+    private VistoPorRepository vistoPorRepository;
 
-    @Autowired
-    private DocumentoRepository documentoRepository;
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    // 1. Servicio para registrar cuando un documento ha sido visto por un usuario
     @Override
-    public void recordDocumentView(Integer documentId, Integer userId) {
-        Documento documento = documentoRepository.findById(documentId)
-                .orElseThrow(() -> new IllegalArgumentException("Documento no encontrado."));
-        Usuario usuario = usuarioRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+    public List<VistoPor> getUserViewHistory(Integer userId) {
+        return vistoPorRepository.findByUsuarioId(userId);
+    }
 
-        VistoPor visualizacion = new  Visualizacion();
+    public void saveView(Integer documentId, Integer userId) {
+        VistoPor visualizacion = new VistoPor();
+        Documento documento = new Documento();
+        Usuario usuario = new Usuario();
+
+        // Establecer relaciones
+        documento.setId(documentId);  // Asignamos el ID del documento
+        usuario.setId(userId);        // Asignamos el ID del usuario
         visualizacion.setDocumento(documento);
         visualizacion.setUsuario(usuario);
         visualizacion.setFechaHora(LocalDateTime.now());
 
-        visualizacionRepository.save(visualizacion);
-    }
-
-    // 2. Servicio para obtener el historial de visualizaciones de un usuario
-    @Override
-    public List<Visualizacion> getUserViewHistory(Integer userId) {
-        return visualizacionRepository.findByUsuarioId(userId);
+        // Guardar la visualización en la base de datos
+        vistoPorRepository.save(visualizacion);
     }
 }

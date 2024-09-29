@@ -30,8 +30,6 @@ public class UsuarioController {
     }
 
     // Autenticar un usuario
-    //No existe un metodo de getcontrasena dentro sde ususario, se tendria que hacer uno nuevo haciendo que haga el get de la contrasena activa
-    
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody Usuario usuario) {
         try {
@@ -62,4 +60,3 @@ public class UsuarioController {
         }
     }
 }
-

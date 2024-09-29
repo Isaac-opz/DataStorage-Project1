@@ -1,13 +1,10 @@
 package com.platform.doctic_project.Service;
 
-import java.util.List;
-
-import com.platform.doctic_project.Model.Valoracion;
-
 public interface IValoracionService {
-    Valoracion rateDocument(Integer documentId, Valoracion valoracion);
-    double calculateAverageRating(Long documentId);
-     List<Valoracion> findByDocumentoId(Integer documentId);
-    void rateDocument(Long documentId, Long userId, int rating);
-    double calculateAverageRating(Long documentId);
+
+    // Método para calcular el promedio de las valoraciones de un documento
+    double calculateAverageRating(Integer documentId);
+
+    // Método para calificar un documento
+    void rateDocument(Integer documentId, Integer userId, int estrellas);
 }

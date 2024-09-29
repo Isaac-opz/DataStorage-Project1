@@ -1,59 +1,46 @@
 package com.platform.doctic_project.Service;
 
-import com.platform.doctic_project.Model.Categoria;
 import com.platform.doctic_project.Model.Documento;
-import com.platform.doctic_project.Repository.DocumentoRepository;
+import com.platform.doctic_project.Model.Usuario;
+import com.platform.doctic_project.Model.VistoPor;
+import com.platform.doctic_project.Model.Descarga;
+import com.platform.doctic_project.Repository.VistoPorRepository;
 import com.platform.doctic_project.Repository.DescargaRepository;
-import com.platform.doctic_project.Repository.VisualizacionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class RecomendacionServiceImp implements IRecomendacionService {
 
     @Autowired
-    private VisualizacionRepository visualizacionRepository;
+    private VistoPorRepository vistoPorRepository;
 
     @Autowired
     private DescargaRepository descargaRepository;
 
-    @Autowired
-    private DocumentoRepository documentoRepository;
-
-    // 1. Servicio para generar recomendaciones de documentos
     @Override
-    public List<Documento> generateDocumentRecommendations(Long userId) {
-        // Obtener el historial de visualizaciones y descargas del usuario
-        List<VistoPor> visualizaciones = visualizacionRepository.findByUsuarioId(userId);
-        List<Descarga> descargas = descargaRepository.findByUsuarioId(userId);
+    public List<Documento> generateDocumentRecommendations(Integer userId) {
+        // Obtener historial de documentos vistos y descargados
+        List<VistoPor> vistos = getUserViewHistory(userId);
+        List<Descarga> descargas = getUserDownloads(userId);
 
-        // Combinar los documentos vistos y descargados para identificar categorías de interés
-        Set<Categoria> categoriasDeInteres = new HashSet<>();
-
-        for (VistoPor visualizacion : visualizaciones) {
-            categoriasDeInteres.add(visualizacion.getDocumento().getCategoria());
-        }
-
-        for (Descarga descarga : descargas) {
-            categoriasDeInteres.add(descarga.getDocumento().getCategoria());
-        }
-
-        // Filtrar documentos por categorías de interés que el usuario aún no ha visto ni descargado
-        List<Documento> documentosRecomendados = documentoRepository.findAll().stream()
-            .filter(documento -> categoriasDeInteres.contains(documento.getCategoria()))
-            .filter(documento -> !haVistoODescargado(userId, documento))
+        // Lógica para generar recomendaciones basadas en historial de vistos y descargas
+        return vistos.stream()
+            .map(VistoPor::getDocumento)
+            .distinct()
             .collect(Collectors.toList());
-
-        return documentosRecomendados;
     }
 
-    // Método auxiliar para verificar si el usuario ha visto o descargado un documento
-    private boolean haVistoODescargado(Integer userId, Documento documento) {
-        boolean visto = visualizacionRepository.existsByUsuarioIdAndDocumentoId(userId, documento.getId());
-        boolean descargado = descargaRepository.existsByUsuarioIdAndDocumentoId(userId, documento.getId());
-        return visto || descargado;
+    // Método para obtener el historial de vistos de un usuario
+    private List<VistoPor> getUserViewHistory(Integer userId) {
+        return vistoPorRepository.findByUserId(userId);
+    }
+
+    // Método para obtener el historial de descargas de un usuario
+    private List<Descarga> getUserDownloads(Integer userId) {
+        return descargaRepository.findByUserId(userId);
     }
 }

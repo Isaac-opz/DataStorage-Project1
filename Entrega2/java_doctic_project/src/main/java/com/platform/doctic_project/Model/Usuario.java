@@ -1,6 +1,11 @@
 package com.platform.doctic_project.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -38,18 +43,22 @@ public class Usuario {
     @Column(name = "respuesta_secreta", nullable = false, length = 45)
     private String respuestaSecreta;
 
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
+    // Este campo es la contraseña del usuario
+    @Column(name = "contrasena", nullable = false)
+    private String contrasena;
+
+    // Métodos para obtener y establecer la contraseña
+
+    public String getContrasena() {
+        return this.contrasena;
     }
 
-    public void setPassword(String encode) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
+    // Método para obtener el ID del usuario
     public Integer getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
+        return this.idUsuario;
     }
 }

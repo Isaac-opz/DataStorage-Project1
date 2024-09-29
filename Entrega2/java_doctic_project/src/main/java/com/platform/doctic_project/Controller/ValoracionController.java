@@ -1,10 +1,16 @@
 package com.platform.doctic_project.Controller;
 
-import com.platform.doctic_project.Service.IValoracionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.platform.doctic_project.Service.IValoracionService;
 
 @RestController
 @RequestMapping("/api/v1/valoraciones") // Endpoint base para valoraciones
@@ -15,7 +21,7 @@ public class ValoracionController {
 
     // Añadir una valoración a un documento
     @PostMapping("/valorar")
-    public ResponseEntity<String> rateDocument(@RequestParam Long documentId, @RequestParam Long userId, @RequestParam int rating) {
+    public ResponseEntity<String> rateDocument(@RequestParam Integer documentId, @RequestParam Integer userId, @RequestParam int rating) {
         try {
             valoracionService.rateDocument(documentId, userId, rating);
             return new ResponseEntity<>("Valoración añadida con éxito.", HttpStatus.OK);
@@ -26,7 +32,7 @@ public class ValoracionController {
 
     // Calcular la valoración promedio de un documento
     @GetMapping("/promedio/{documentId}")
-    public ResponseEntity<Double> calculateAverageRating(@PathVariable Long documentId) {
+    public ResponseEntity<?> calculateAverageRating(@PathVariable Integer documentId) {
         try {
             double averageRating = valoracionService.calculateAverageRating(documentId);
             return ResponseEntity.ok(averageRating);

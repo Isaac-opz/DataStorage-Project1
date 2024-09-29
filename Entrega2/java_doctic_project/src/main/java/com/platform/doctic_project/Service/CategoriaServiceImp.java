@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class CategoriaServiceImp {
+public class CategoriaServiceImp implements ICategoriaService {
 
     @Autowired
     private CategoriaRepository categoriaRepository;
@@ -19,27 +19,30 @@ public class CategoriaServiceImp {
     @Autowired
     private DocumentoRepository documentoRepository;
 
-    // 1. Servicio para obtener todas las categorías disponibles
+    // Get all categories
+    @Override
     public List<Categoria> getAllCategories() {
         return categoriaRepository.findAll();
     }
 
-    // 2. Servicio para asignar una categoría a un documento
-    public Documento assignCategoryToDocument(Long documentId, Long categoryId) {
-        // Verificar si el documento existe
-        Optional<Documento> documento = documentoRepository.findById(documentId);
-        if (documento.isEmpty()) {
+    // Assign a category to a document
+    @Override
+    public Documento assignCategoryToDocument(Integer documentId, Integer categoryId) {
+        // Find document by ID
+        Optional<Documento> documentoOpt = documentoRepository.findById(documentId);
+        if (documentoOpt.isEmpty()) {
             throw new IllegalArgumentException("Documento no encontrado.");
         }
 
-        // Verificar si la categoría existe
-        Optional<Categoria> categoria = categoriaRepository.findById(categoryId);
-        if (categoria.isEmpty()) {
+        // Find category by ID
+        Optional<Categoria> categoriaOpt = categoriaRepository.findById(categoryId);
+        if (categoriaOpt.isEmpty()) {
             throw new IllegalArgumentException("Categoría no encontrada.");
         }
 
-        // Asignar la categoría al documento y guardar cambios
-        documento.get().setCategoria(categoria.get());
-        return documentoRepository.save(documento.get());
+        // Assign category to document and save changes
+        Documento documento = documentoOpt.get();
+        documento.setCategoria(categoriaOpt.get());
+        return documentoRepository.save(documento);
     }
 }
