@@ -29,13 +29,23 @@ public class UserServiceImpl implements UserService {
         // Guardar el usuario sin contraseñas
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
 
-        // Guardar la contraseña en el historial
+        // Obtener la contraseña inicial desde el usuario
+        String contrasenaInicial = usuario.getContrasenaInicial();
+
+        if (contrasenaInicial == null || contrasenaInicial.isEmpty()) {
+            throw new IllegalArgumentException("La contraseña inicial no puede estar vacía.");
+        }
+
+        // Crear y guardar el historial de contraseñas con la contraseña inicial
         HistorialContrasena historial = new HistorialContrasena();
         historial.setUsuario(nuevoUsuario);
-        historial.setContrasena(usuario.getContrasenaActiva());
+        historial.setContrasena(contrasenaInicial);
         historial.setEstado(Estado.activa);
 
         historialContrasenaRepository.save(historial);
+
+        // Agregar el historial al usuario
+        nuevoUsuario.getHistorialesContrasena().add(historial);
 
         return nuevoUsuario;
     }

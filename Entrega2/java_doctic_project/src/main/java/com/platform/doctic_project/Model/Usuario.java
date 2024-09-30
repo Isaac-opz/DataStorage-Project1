@@ -1,6 +1,9 @@
 package com.platform.doctic_project.Model;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -10,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "usuario")
@@ -39,7 +43,8 @@ public class Usuario {
     private String respuestaSecreta;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
-    private List<HistorialContrasena> historialesContrasena;
+    @JsonManagedReference
+    private List<HistorialContrasena> historialesContrasena = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Comentario> comentarios;
@@ -55,6 +60,14 @@ public class Usuario {
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Valoracion> valoraciones;
+
+    @Transient
+    private String contrasenaInicial;  // Campo temporal para manejar la contraseña inicial
+
+    // Constructor que inicializa la lista de historiales de contraseñas
+    public Usuario() {
+        this.historialesContrasena = new ArrayList<>();
+    }
 
     // Método para obtener la contraseña activa
     public String getContrasenaActiva() {
@@ -170,5 +183,13 @@ public class Usuario {
 
     public void setValoraciones(List<Valoracion> valoraciones) {
         this.valoraciones = valoraciones;
+    }
+
+    public String getContrasenaInicial() {
+        return contrasenaInicial;
+    }
+
+    public void setContrasenaInicial(String contrasenaInicial) {
+        this.contrasenaInicial = contrasenaInicial;
     }
 }

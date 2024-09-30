@@ -2,6 +2,8 @@ package com.platform.doctic_project.Model;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -24,6 +26,7 @@ public class HistorialContrasena {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
+    @JsonBackReference // Marca esta relación como la parte "hija" en la serialización
     private Usuario usuario;
 
     @Column(name = "contrasena", nullable = false)
@@ -42,8 +45,16 @@ public class HistorialContrasena {
         inactiva
     }
 
-    // Constructor
+    // Constructor por defecto
     public HistorialContrasena() {
+        this.fechaCambio = LocalDateTime.now();
+    }
+
+    // Constructor para crear con contraseña y estado
+    public HistorialContrasena(Usuario usuario, String contrasena, Estado estado) {
+        this.usuario = usuario;
+        this.contrasena = contrasena;
+        this.estado = estado;
         this.fechaCambio = LocalDateTime.now();
     }
 
