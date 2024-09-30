@@ -1,16 +1,18 @@
 package com.platform.doctic_project.Model;
 
-import jakarta.persistence.*;
 import java.util.List;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "categoria")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Categoria {
 
     @Id
@@ -18,13 +20,27 @@ public class Categoria {
     @Column(name = "id_categoria")
     private Integer idCategoria;
 
-    @Column(name = "categoria", nullable = false, length = 255)
-    private String categoria;
+    @Column(name = "nombre_categoria", nullable = false)
+    private String nombreCategoria;
 
-    @ManyToOne
-    @JoinColumn(name = "id_metacategoria")
-    private Categoria metacategoria;
+    @OneToMany(mappedBy = "categoria", cascade = CascadeType.ALL)
+    private List<Documento> documentos;
 
-    @OneToMany(mappedBy = "metacategoria")
-    private List<Categoria> subcategorias;
+    // Getters y Setters
+
+    public Integer getIdCategoria() {
+        return idCategoria;
+    }
+
+    public void setIdCategoria(Integer idCategoria) {
+        this.idCategoria = idCategoria;
+    }
+
+    public String getNombreCategoria() {
+        return nombreCategoria;
+    }
+
+    public void setNombreCategoria(String nombreCategoria) {
+        this.nombreCategoria = nombreCategoria;
+    }
 }

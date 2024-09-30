@@ -3,8 +3,8 @@ package com.platform.doctic_project.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.platform.doctic_project.Model.Categoria;
+import com.platform.doctic_project.Model.AutorDocumento;
 
 @Repository
-public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
+public interface AutorDocumentoRepository extends JpaRepository<AutorDocumento, Integer> {
 }
