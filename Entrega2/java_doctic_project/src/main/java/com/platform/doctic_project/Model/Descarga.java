@@ -32,4 +32,36 @@ public class Descarga {
     private LocalDateConverter fechaHora;
 
     // Getters y Setters
+
+    public Integer getIdDescarga() {
+        return idDescarga;
+    }
+
+    public void setIdDescarga(Integer idDescarga) {
+        this.idDescarga = idDescarga;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public LocalDateConverter getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(LocalDateConverter fechaHora) {
+        this.fechaHora = fechaHora;
+    }
 }

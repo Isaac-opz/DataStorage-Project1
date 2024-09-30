@@ -30,4 +30,36 @@ public class AutorDocumento {
     private String publico;
 
     // Getters y Setters
+
+    public Integer getIdAutorDocumento() {
+        return idAutorDocumento;
+    }
+
+    public void setIdAutorDocumento(Integer idAutorDocumento) {
+        this.idAutorDocumento = idAutorDocumento;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getPublico() {
+        return publico;
+    }
+
+    public void setPublico(String publico) {
+        this.publico = publico;
+    }
 }

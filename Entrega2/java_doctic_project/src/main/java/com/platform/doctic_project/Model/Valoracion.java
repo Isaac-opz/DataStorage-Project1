@@ -30,4 +30,36 @@ public class Valoracion {
     private Usuario usuario;
 
     // Getters y Setters
+
+    public Integer getIdValoracion() {
+        return idValoracion;
+    }
+
+    public void setIdValoracion(Integer idValoracion) {
+        this.idValoracion = idValoracion;
+    }
+
+    public Integer getEstrellas() {
+        return estrellas;
+    }
+
+    public void setEstrellas(Integer estrellas) {
+        this.estrellas = estrellas;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 }

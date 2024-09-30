@@ -62,4 +62,108 @@ public class Documento {
     private List<Valoracion> valoraciones;
 
     // Getters y Setters
+
+    public Integer getIdDocumento() {
+        return idDocumento;
+    }
+
+    public void setIdDocumento(Integer idDocumento) {
+        this.idDocumento = idDocumento;
+    }
+
+    public String getNombreDocumento() {
+        return nombreDocumento;
+    }
+
+    public void setNombreDocumento(String nombreDocumento) {
+        this.nombreDocumento = nombreDocumento;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public LocalDateConverter getFechaPublicacion() {
+        return fechaPublicacion;
+    }
+
+    public void setFechaPublicacion(LocalDateConverter fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getVisibilidad() {
+        return visibilidad;
+    }
+
+    public void setVisibilidad(String visibilidad) {
+        this.visibilidad = visibilidad;
+    }
+
+    public Double getValoracion() {
+        return valoracion;
+    }
+
+    public void setValoracion(Double valoracion) {
+        this.valoracion = valoracion;
+    }
+
+    public Categoria getCategoria() {
+        return categoria;
+    }
+
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
+
+    public List<Comentario> getComentarios() {
+        return comentarios;
+    }
+
+    public void setComentarios(List<Comentario> comentarios) {
+        this.comentarios = comentarios;
+    }
+
+    public List<AutorDocumento> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<AutorDocumento> autores) {
+        this.autores = autores;
+    }
+
+    public List<Descarga> getDescargas() {
+        return descargas;
+    }
+
+    public void setDescargas(List<Descarga> descargas) {
+        this.descargas = descargas;
+    }
+
+    public List<VistoPor> getVistos() {
+        return vistos;
+    }
+
+    public void setVistos(List<VistoPor> vistos) {
+        this.vistos = vistos;
+    }
+
+    public List<Valoracion> getValoraciones() {
+        return valoraciones;
+    }
+
+    public void setValoraciones(List<Valoracion> valoraciones) {
+        this.valoraciones = valoraciones;
+    }
 }

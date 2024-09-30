@@ -35,4 +35,44 @@ public class Comentario {
     private LocalDateConverter fechaComentario;
 
     // Getters y Setters
+
+    public Integer getIdComentario() {
+        return idComentario;
+    }
+
+    public void setIdComentario(Integer idComentario) {
+        this.idComentario = idComentario;
+    }
+
+    public Documento getDocumento() {
+        return documento;
+    }
+
+    public void setDocumento(Documento documento) {
+        this.documento = documento;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public LocalDateConverter getFechaComentario() {
+        return fechaComentario;
+    }
+
+    public void setFechaComentario(LocalDateConverter fechaComentario) {
+        this.fechaComentario = fechaComentario;
+    }
 }
