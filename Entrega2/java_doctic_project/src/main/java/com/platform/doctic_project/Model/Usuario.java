@@ -1,15 +1,18 @@
 package com.platform.doctic_project.Model;
 
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "usuario")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Usuario {
 
     @Id
@@ -17,39 +20,41 @@ public class Usuario {
     @Column(name = "id_usuario")
     private Integer idUsuario;
 
-    @Column(name = "username", nullable = false, unique = true, length = 50)
-    private String username;
-
-    @Column(name = "nombre_usuario", nullable = false, unique = true, length = 50)
+    @Column(name = "nombre_usuario", nullable = false, unique = true)
     private String nombreUsuario;
 
-    @Column(name = "correo_electronico", nullable = false, unique = true, length = 150)
+    @Column(name = "correo_electronico", nullable = false, unique = true)
     private String correoElectronico;
 
-    @Column(name = "ciudad", length = 100)
+    @Column(name = "ciudad")
     private String ciudad;
 
-    @Column(name = "departamento", length = 100)
+    @Column(name = "departamento")
     private String departamento;
 
-    @Column(name = "pregunta_secreta", nullable = false, length = 255)
+    @Column(name = "pregunta_secreta", nullable = false)
     private String preguntaSecreta;
 
-    @Column(name = "respuesta_secreta", nullable = false, length = 45)
+    @Column(name = "respuesta_secreta", nullable = false)
     private String respuestaSecreta;
 
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
-    }
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<HistorialContrasena> historialesContrasena;
 
-    public void setPassword(String encode) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
-    }
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Comentario> comentarios;
 
-    public Integer getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
-    }
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<AutorDocumento> documentosAutor;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Descarga> descargas;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<VistoPor> vistos;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    private List<Valoracion> valoraciones;
+
+    // Getters y Setters
 }

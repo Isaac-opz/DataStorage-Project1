@@ -1,17 +1,16 @@
 package com.platform.doctic_project.Model;
 
-
-import com.platform.doctic_project.Model.ENUM.Publico;
-import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "autor_documento")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class AutorDocumento {
 
     @Id
@@ -20,14 +19,15 @@ public class AutorDocumento {
     private Integer idAutorDocumento;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario", nullable = false)
-    private Usuario usuario;
-
-    @ManyToOne
     @JoinColumn(name = "id_documento", nullable = false)
     private Documento documento;
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
     @Column(name = "publico")
-    @Enumerated(EnumType.STRING)
-    private Publico publico;
+    private String publico;
+
+    // Getters y Setters
 }

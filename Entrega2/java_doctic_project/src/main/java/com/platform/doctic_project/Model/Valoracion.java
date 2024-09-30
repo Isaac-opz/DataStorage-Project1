@@ -1,16 +1,16 @@
 package com.platform.doctic_project.Model;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "valoracion")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Valoracion {
 
     @Id
@@ -18,17 +18,16 @@ public class Valoracion {
     @Column(name = "id_valoracion")
     private Integer idValoracion;
 
-    @Column(name = "estrellas")
+    @Column(name = "estrellas", nullable = false)
     private Integer estrellas;
 
-    @Column(name = "fecha_valoracion")
-    private LocalDate fechaValoracion;
+    @ManyToOne
+    @JoinColumn(name = "id_documento", nullable = false)
+    private Documento documento;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "id_documento", nullable = false)
-    private Documento documento;
+    // Getters y Setters
 }

@@ -1,16 +1,18 @@
 package com.platform.doctic_project.Model;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
+
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "descarga")
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class Descarga {
 
     @Id
@@ -18,14 +20,16 @@ public class Descarga {
     @Column(name = "id_descarga")
     private Integer idDescarga;
 
-    @Column(name = "fecha_hora")
-    private LocalDateTime fechaHora;
+    @ManyToOne
+    @JoinColumn(name = "id_documento", nullable = false)
+    private Documento documento;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @ManyToOne
-    @JoinColumn(name = "id_documento", nullable = false)
-    private Documento documento;
+    @Column(name = "fecha_hora", nullable = false)
+    private LocalDateConverter fechaHora;
+
+    // Getters y Setters
 }
