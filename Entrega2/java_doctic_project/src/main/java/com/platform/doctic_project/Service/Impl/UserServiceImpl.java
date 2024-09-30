@@ -15,13 +15,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Usuario createUser(Usuario usuario) {
-        // Lógica para registrar un usuario
+        if (usuarioRepository.existsByNombreUsuarioOrCorreoElectronico(usuario.getNombreUsuario(), usuario.getCorreoElectronico())) {
+            throw new IllegalArgumentException("El nombre de usuario o correo electrónico ya están en uso.");
+        }
         return usuarioRepository.save(usuario);
     }
 
     @Override
-    public Usuario authenticateUser(String username, String password) {
-        // Lógica para autenticar un usuario
-        return null; // Implementa la lógica aquí
+    public Usuario authenticateUser(String nombreUsuario, String contrasena) {
+        Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
+                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
+        String contrasenaActiva = usuario.getContrasenaActiva();
+        if (contrasenaActiva != null && contrasenaActiva.equals(contrasena)) {
+            return usuario;
+        } else {
+            throw new IllegalArgumentException("Contraseña incorrecta.");
+        }
     }
 }

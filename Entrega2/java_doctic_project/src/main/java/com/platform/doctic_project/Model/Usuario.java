@@ -56,6 +56,16 @@ public class Usuario {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     private List<Valoracion> valoraciones;
 
+    // Método para obtener la contraseña activa
+    public String getContrasenaActiva() {
+        for (HistorialContrasena historial : historialesContrasena) {
+            if (historial.getEstado() == HistorialContrasena.Estado.activa) {
+                return historial.getContrasena();
+            }
+        }
+        return null;
+    }
+
     // Getters y Setters
 
     public Integer getIdUsuario() {

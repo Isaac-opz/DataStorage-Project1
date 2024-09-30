@@ -6,6 +6,8 @@ import java.util.List;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,11 +37,21 @@ public class Documento {
     @Column(name = "url", nullable = false)
     private String url;
 
-    @Column(name = "visibilidad", nullable = false)
-    private String visibilidad;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "visibilidad", nullable = false, columnDefinition = "ENUM('publico', 'privado')")
+    private Visibilidad visibilidad;
 
-    @Column(name = "valoracion")
-    private Double valoracion;
+    @Column(name = "valoracion", nullable = false)
+    private Double valoracion = 0.0;
+
+    @Column(name = "num_descargas", nullable = false)
+    private Integer numDescargas = 0;
+
+    @Column(name = "num_vistas", nullable = false)
+    private Integer numVistas = 0;
+
+    @Column(name = "num_comentarios", nullable = false)
+    private Integer numComentarios = 0;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)
@@ -61,6 +73,17 @@ public class Documento {
     private List<Valoracion> valoraciones;
 
     // Getters y Setters
+
+    // Enum para 'visibilidad'
+    public enum Visibilidad {
+        publico,
+        privado
+    }
+
+    // Constructor
+    public Documento() {
+        this.fechaPublicacion = LocalDateTime.now();
+    }
 
     public Integer getIdDocumento() {
         return idDocumento;
@@ -102,12 +125,16 @@ public class Documento {
         this.url = url;
     }
 
-    public String getVisibilidad() {
+    public Visibilidad getVisibilidad() {
         return visibilidad;
     }
 
     public void setVisibilidad(String visibilidad) {
-        this.visibilidad = visibilidad;
+        try {
+            this.visibilidad = Visibilidad.valueOf(visibilidad.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Valor de visibilidad inválido: " + visibilidad);
+        }
     }
 
     public Double getValoracion() {

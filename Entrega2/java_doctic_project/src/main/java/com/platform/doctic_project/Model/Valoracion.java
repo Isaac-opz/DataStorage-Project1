@@ -1,5 +1,7 @@
 package com.platform.doctic_project.Model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,6 +23,9 @@ public class Valoracion {
     @Column(name = "estrellas", nullable = false)
     private Integer estrellas;
 
+    @Column(name = "fecha_valoracion", nullable = false)
+    private LocalDateTime fechaValoracion;
+
     @ManyToOne
     @JoinColumn(name = "id_documento", nullable = false)
     private Documento documento;
@@ -28,6 +33,11 @@ public class Valoracion {
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+
+    // Constructor
+    public Valoracion() {
+        this.fechaValoracion = LocalDateTime.now();
+    }
 
     // Getters y Setters
 

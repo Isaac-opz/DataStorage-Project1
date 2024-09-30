@@ -31,6 +31,10 @@ public class VistoPor {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
+    // Constructor
+    public VistoPor() {
+        this.fechaHora = LocalDateTime.now();
+    }
     // Getters y Setters
 
     public Integer getIdVistoPor() {

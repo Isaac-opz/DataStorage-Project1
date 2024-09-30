@@ -31,6 +31,11 @@ public class Descarga {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
+    // Constructor para inicializar fechaHora
+    public Descarga() {
+        this.fechaHora = LocalDateTime.now();
+    }
+
     // Getters y Setters
 
     public Integer getIdDescarga() {

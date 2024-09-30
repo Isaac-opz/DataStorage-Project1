@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,8 +32,20 @@ public class HistorialContrasena {
     @Column(name = "fecha_cambio", nullable = false)
     private LocalDateTime fechaCambio;
 
-    @Column(name = "estado", nullable = false)
-    private String estado;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "estado", nullable = false, columnDefinition = "ENUM('activa', 'inactiva')")
+    private Estado estado;
+
+    // Enum para 'estado'
+    public enum Estado {
+        activa,
+        inactiva
+    }
+
+    // Constructor
+    public HistorialContrasena() {
+        this.fechaCambio = LocalDateTime.now();
+    }
 
     // Getters y Setters
 
@@ -67,11 +81,11 @@ public class HistorialContrasena {
         this.fechaCambio = fechaCambio;
     }
 
-    public String getEstado() {
+    public Estado getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(Estado estado) {
         this.estado = estado;
     }
 }

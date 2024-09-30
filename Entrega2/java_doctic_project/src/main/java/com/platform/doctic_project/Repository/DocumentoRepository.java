@@ -9,7 +9,7 @@ import com.platform.doctic_project.Model.Documento;
 
 @Repository
 public interface DocumentoRepository extends JpaRepository<Documento, Integer> {
-    List<Documento> findByVisibilidad(String visibilidad);
+    List<Documento> findByVisibilidad(Documento.Visibilidad visibilidad);
 
-    List<Documento> findByNombreDocumentoContainingOrUsuarioNombreUsuarioContaining(String searchQuery, String searchQuery2);
+    //List<Documento> findByNombreDocumentoContainingOrUsuario_NombreUsuarioContaining(String nombreDocumento, String nombreUsuario);
 }

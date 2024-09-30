@@ -18,7 +18,7 @@ public class RecommendationServiceImpl implements RecommendationService {
     @Override
     public List<Documento> generateDocumentRecommendations(Integer userId) {
         // Lógica para generar recomendaciones basadas en el historial de visualizaciones del usuario
-        List<Documento> viewedDocuments = vistoPorRepository.findByUsuarioId(userId).stream()
+        List<Documento> viewedDocuments = vistoPorRepository.findById(userId).stream()
                 .map(vistoPor -> vistoPor.getDocumento())
                 .toList();
 

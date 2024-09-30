@@ -2,6 +2,8 @@ package com.platform.doctic_project.Model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,8 +28,17 @@ public class AutorDocumento {
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
 
-    @Column(name = "publico")
-    private String publico;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "publico", nullable = false, columnDefinition = "ENUM('Si', 'No') DEFAULT 'Si'")
+    private Publico publico = Publico.Si;
+
+    // Getters y Setters
+
+    // Enum para 'publico'
+    public enum Publico {
+        Si,
+        No
+    }
 
     // Getters y Setters
 
@@ -55,11 +66,12 @@ public class AutorDocumento {
         this.usuario = usuario;
     }
 
-    public String getPublico() {
+    public Publico getPublico() {
         return publico;
     }
 
-    public void setPublico(String publico) {
-        this.publico = publico;
+    @SuppressWarnings("rawtypes")
+    public void setPublico(Enum publico) {
+        this.publico = (Publico) publico;
     }
 }
