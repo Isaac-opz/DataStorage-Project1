@@ -1,6 +1,6 @@
 package com.platform.doctic_project.Model;
 
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,7 +32,7 @@ public class Comentario {
     private String comentario;
 
     @Column(name = "fecha_comentario", nullable = false)
-    private LocalDateConverter fechaComentario;
+    private LocalDateTime fechaComentario;
 
     // Getters y Setters
 
@@ -68,11 +68,11 @@ public class Comentario {
         this.comentario = comentario;
     }
 
-    public LocalDateConverter getFechaComentario() {
+    public LocalDateTime getFechaComentario() {
         return fechaComentario;
     }
 
-    public void setFechaComentario(LocalDateConverter fechaComentario) {
+    public void setFechaComentario(LocalDateTime fechaComentario) {
         this.fechaComentario = fechaComentario;
     }
 }

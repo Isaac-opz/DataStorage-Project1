@@ -1,6 +1,6 @@
 package com.platform.doctic_project.Model;
 
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -28,7 +28,7 @@ public class HistorialContrasena {
     private String contrasena;
 
     @Column(name = "fecha_cambio", nullable = false)
-    private LocalDateConverter fechaCambio;
+    private LocalDateTime fechaCambio;
 
     @Column(name = "estado", nullable = false)
     private String estado;
@@ -59,11 +59,11 @@ public class HistorialContrasena {
         this.contrasena = contrasena;
     }
 
-    public LocalDateConverter getFechaCambio() {
+    public LocalDateTime getFechaCambio() {
         return fechaCambio;
     }
 
-    public void setFechaCambio(LocalDateConverter fechaCambio) {
+    public void setFechaCambio(LocalDateTime fechaCambio) {
         this.fechaCambio = fechaCambio;
     }
 

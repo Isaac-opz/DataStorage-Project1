@@ -1,8 +1,7 @@
 package com.platform.doctic_project.Model;
 
+import java.time.LocalDateTime;
 import java.util.List;
-
-import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters.LocalDateConverter;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,7 +30,7 @@ public class Documento {
     private String descripcion;
 
     @Column(name = "fecha_publicacion", nullable = false)
-    private LocalDateConverter fechaPublicacion;
+    private LocalDateTime fechaPublicacion;
 
     @Column(name = "url", nullable = false)
     private String url;
@@ -87,11 +86,11 @@ public class Documento {
         this.descripcion = descripcion;
     }
 
-    public LocalDateConverter getFechaPublicacion() {
+    public LocalDateTime getFechaPublicacion() {
         return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(LocalDateConverter fechaPublicacion) {
+    public void setFechaPublicacion(LocalDateTime fechaPublicacion) {
         this.fechaPublicacion = fechaPublicacion;
     }
 
