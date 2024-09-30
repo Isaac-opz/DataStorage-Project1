@@ -1,11 +1,11 @@
 package com.platform.doctic_project.Service.Impl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.platform.doctic_project.Exception.RecursoNoEncontradoException;
 import com.platform.doctic_project.Model.Comentario;
 import com.platform.doctic_project.Model.Documento;
 import com.platform.doctic_project.Repository.ComentarioRepository;
@@ -23,31 +23,55 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Comentario addComment(Comentario comentario) {
-        return comentarioRepository.save(comentario);
+        // Verificar que el documento exista
+        Documento documento = documentoRepository.findById(comentario.getDocumento().getIdDocumento())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + comentario.getDocumento().getIdDocumento()));
+
+        // Guardar el comentario
+        Comentario nuevoComentario = comentarioRepository.save(comentario);
+
+        // Actualizar el contador de comentarios del documento
+        documento.setNumComentarios(documento.getNumComentarios() + 1);
+        documentoRepository.save(documento);
+
+        return nuevoComentario;
     }
 
     @Override
     public Comentario replyToComment(Integer parentCommentId, Comentario comentario) {
-        // Lógica para responder a un comentario
-        return null;
+        // Verificar que el comentario padre exista
+        Comentario comentarioPadre = comentarioRepository.findById(parentCommentId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Comentario no encontrado con ID: " + parentCommentId));
+
+        // Establecer el comentario padre
+        comentario.setMetacomentario(comentarioPadre);
+
+        // Guardar la respuesta
+        return addComment(comentario);
     }
 
     @Override
     public List<Comentario> listDocumentComments(Integer documentId) {
-        // Recuperar el objeto Documento por su ID
-        Optional<Documento> documentoOpt = documentoRepository.findById(documentId);
-        
-        if (documentoOpt.isPresent()) {
-            Documento documento = documentoOpt.get();
-            // Pasar el objeto Documento al repositorio de comentarios
-            return comentarioRepository.findByDocumento(documento);
-        } else {
-            throw new IllegalArgumentException("Documento no encontrado con ID: " + documentId);
-        }
+        // Verificar que el documento exista
+        Documento documento = documentoRepository.findById(documentId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + documentId));
+
+        // Obtener los comentarios del documento
+        return comentarioRepository.findByDocumento(documento);
     }
 
     @Override
     public void deleteComment(Integer commentId) {
-        comentarioRepository.deleteById(commentId);
+        // Verificar que el comentario exista
+        Comentario comentario = comentarioRepository.findById(commentId)
+                .orElseThrow(() -> new RecursoNoEncontradoException("Comentario no encontrado con ID: " + commentId));
+
+        // Eliminar el comentario
+        comentarioRepository.delete(comentario);
+
+        // Actualizar el contador de comentarios del documento
+        Documento documento = comentario.getDocumento();
+        documento.setNumComentarios(documento.getNumComentarios() - 1);
+        documentoRepository.save(documento);
     }
 }

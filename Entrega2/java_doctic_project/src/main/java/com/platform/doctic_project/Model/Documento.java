@@ -129,12 +129,8 @@ public class Documento {
         return visibilidad;
     }
 
-    public void setVisibilidad(String visibilidad) {
-        try {
-            this.visibilidad = Visibilidad.valueOf(visibilidad.toLowerCase());
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException("Valor de visibilidad inválido: " + visibilidad);
-        }
+    public void setVisibilidad(Visibilidad visibilidad) {
+    this.visibilidad = visibilidad;
     }
 
     public Double getValoracion() {
@@ -191,5 +187,28 @@ public class Documento {
 
     public void setValoraciones(List<Valoracion> valoraciones) {
         this.valoraciones = valoraciones;
+    }
+    public Integer getNumComentarios() {
+        return numComentarios;
+    }
+    
+    public void setNumComentarios(Integer numComentarios) {
+        this.numComentarios = numComentarios;
+    }
+
+    public Integer getNumDescargas() {
+        return numDescargas;
+    }
+    
+    public void setNumDescargas(Integer numDescargas) {
+        this.numDescargas = numDescargas;
+    }
+
+    public Integer getNumVistas() {
+        return numVistas;
+    }
+    
+    public void setNumVistas(Integer numVistas) {
+        this.numVistas = numVistas;
     }
 }
