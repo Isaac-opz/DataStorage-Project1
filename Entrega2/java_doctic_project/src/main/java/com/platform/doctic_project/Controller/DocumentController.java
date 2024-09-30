@@ -31,8 +31,8 @@ public class DocumentController {
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<Documento> createDocument(@RequestBody Documento documento) {
-        Documento newDocument = documentService.createDocument(documento);
+    public ResponseEntity<Documento> createDocument(@RequestBody Documento documento, @RequestParam Integer userId) {
+        Documento newDocument = documentService.createDocument(documento, userId);
         return ResponseEntity.ok(newDocument);
     }
 

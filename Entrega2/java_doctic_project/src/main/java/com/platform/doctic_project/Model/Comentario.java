@@ -85,4 +85,13 @@ public class Comentario {
     public void setFechaComentario(LocalDateTime fechaComentario) {
         this.fechaComentario = fechaComentario;
     }
+
+    public Comentario getMetacomentario() {
+        return metacomentario;
+    }
+
+    public void setMetacomentario(Comentario metacomentario) {
+        this.metacomentario = metacomentario;
+    }
+    
 }
