@@ -3,13 +3,17 @@ package com.platform.doctic_project.Model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "usuario")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Usuario {
 
     @Id
@@ -20,7 +24,7 @@ public class Usuario {
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
 
-    @Column(name = "nombre_usuario", nullable = false, unique = true, length = 50)
+    @Column(name = "nombre_usuario", nullable = false, length = 50)
     private String nombreUsuario;
 
     @Column(name = "correo_electronico", nullable = false, unique = true, length = 150)
@@ -38,18 +42,8 @@ public class Usuario {
     @Column(name = "respuesta_secreta", nullable = false, length = 45)
     private String respuestaSecreta;
 
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
-    }
+    @Column(name = "password", nullable = false)  // Asegúrate de incluir este campo
+    private String password;  // Campo para la contraseña
 
-    public void setPassword(String encode) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
-    }
-
-    public Integer getId() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getId'");
-    }
+    // No necesitas los métodos getPassword y setPassword porque Lombok generará getters y setters automáticamente
 }

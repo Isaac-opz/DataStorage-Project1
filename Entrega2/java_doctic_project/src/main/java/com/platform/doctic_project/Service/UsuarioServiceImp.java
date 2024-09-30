@@ -17,20 +17,20 @@ public class UsuarioServiceImp implements IUsuarioService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    // 1. Crear un nuevo usuario
+    @Autowired
+    private PasswordHistoryServiceImp passwordHistoryService;
+
     @Override
     public Usuario createUser(Usuario usuario) {
-        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));  // Cifrar contraseña
+        usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         return usuarioRepository.save(usuario);
     }
 
-    // 2. Validar la existencia del usuario
     @Override
     public boolean validateUserExistence(String username, String correoElectronico) {
         return usuarioRepository.existsByUsernameOrCorreoElectronico(username, correoElectronico);
     }
 
-    // 3. Autenticar usuario
     @Override
     public Optional<Usuario> authenticateUser(String username, String password) {
         Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
@@ -41,26 +41,35 @@ public class UsuarioServiceImp implements IUsuarioService {
         }
     }
 
-    // 4. Recuperar contraseña
+    @Override
+    public void savePasswordToHistory(int id_usuario, String contrasena) {
+        passwordHistoryService.savePasswordToHistory(id_usuario, contrasena);
+    }
+
+    @Override
+    public boolean checkPasswordHistory(int id_usuario, String contrasena) {
+        return passwordHistoryService.checkPasswordHistory(id_usuario, contrasena);
+    }
+
+    @Override
+    public Usuario updateUser(Usuario usuario) {
+        if (!usuarioRepository.existsById(usuario.getIdUsuario())) {
+            throw new IllegalArgumentException("El usuario no existe.");
+        }
+        return usuarioRepository.save(usuario);
+    }
+
     @Override
     public boolean recoverPassword(String username, String answerToSecurityQuestion, String newPassword) {
         Optional<Usuario> usuario = usuarioRepository.findByUsername(username);
-        if (usuario.isPresent() && usuario.get().getRespuestaSecreta().equals(answerToSecurityQuestion)) {
-            usuario.get().setPassword(passwordEncoder.encode(newPassword));
-            usuarioRepository.save(usuario.get());
-            return true;
-        } else {
-            return false;
+        if (usuario.isPresent()) {
+            Usuario foundUser = usuario.get();
+            if (foundUser.getRespuestaSecreta().equals(answerToSecurityQuestion)) {
+                foundUser.setPassword(passwordEncoder.encode(newPassword));
+                usuarioRepository.save(foundUser);
+                return true;
+            }
         }
-    }
-
-    // 5. Actualizar usuario
-    @Override
-    public Usuario updateUser(Usuario usuario) {
-        if (!usuarioRepository.existsById(usuario.getId())) {
-            throw new IllegalArgumentException("El usuario no existe.");
-        }
-        // Lógica adicional para la actualización si es necesario
-        return usuarioRepository.save(usuario);
+        return false;
     }
 }

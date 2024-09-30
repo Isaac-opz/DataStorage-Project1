@@ -9,4 +9,8 @@ public interface IUsuarioService {
     Optional<Usuario> authenticateUser(String username, String password);
     boolean recoverPassword(String username, String answerToSecurityQuestion, String newPassword);
     Usuario updateUser(Usuario usuario);
+    
+    // Métodos para el historial de contraseñas
+    void savePasswordToHistory(int id_usuario, String contrasena);
+    boolean checkPasswordHistory(int id_usuario, String contrasena);
 }

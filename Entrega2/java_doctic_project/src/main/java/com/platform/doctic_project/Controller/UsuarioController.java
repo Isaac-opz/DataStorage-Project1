@@ -2,11 +2,12 @@ package com.platform.doctic_project.Controller;
 
 import com.platform.doctic_project.Model.Usuario;
 import com.platform.doctic_project.Service.IUsuarioService;
-import com.platform.doctic_project.Service.IPasswordHistoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/api/v1/usuarios") // Endpoint base para usuarios
@@ -15,8 +16,6 @@ public class UsuarioController {
     @Autowired
     private IUsuarioService usuarioService; // Usamos la interfaz
 
-    @Autowired
-    private IPasswordHistoryService passwordHistoryService; // Usamos la interfaz
 
     // Registrar un nuevo usuario
     @PostMapping("/registrar")
@@ -30,13 +29,11 @@ public class UsuarioController {
     }
 
     // Autenticar un usuario
-    //No existe un metodo de getcontrasena dentro sde ususario, se tendria que hacer uno nuevo haciendo que haga el get de la contrasena activa
-    
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody Usuario usuario) {
         try {
-            boolean isAuthenticated = usuarioService.authenticateUser(usuario.getUsername(), usuario.getContrasena());
-            if (isAuthenticated) {
+            Optional<Usuario> authenticatedUser = usuarioService.authenticateUser(usuario.getUsername(), usuario.getPassword());
+            if (authenticatedUser.isPresent()) {
                 return ResponseEntity.ok("Autenticación exitosa.");
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales inválidas.");
@@ -46,16 +43,28 @@ public class UsuarioController {
         }
     }
 
-    // Recuperar contraseña
-    @PostMapping("/recuperar-contrasena")
-    public ResponseEntity<String> recoverPassword(@RequestParam String username, @RequestParam String respuestaSecreta) {
+    // Eliminar el método de recuperar contraseña, ya que no es necesario
+
+    // Agregar un nuevo método para guardar contraseña en el historial
+    @PostMapping("/save-password-to-history")
+    public ResponseEntity<String> savePasswordToHistory(@RequestParam int id_usuario, @RequestParam String contrasena) {
         try {
-            boolean isRecovered = usuarioService.recoverPassword(username, respuestaSecreta, respuestaSecreta);
-            if (isRecovered) {
-                passwordHistoryService.savePasswordToHistory(username); // Guardar en el historial de contraseñas
-                return ResponseEntity.ok("Contraseña recuperada con éxito.");
+            usuarioService.savePasswordToHistory(id_usuario, contrasena);
+            return ResponseEntity.ok("Contraseña guardada en el historial con éxito.");
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    // Agregar un nuevo método para verificar si una contraseña ya fue utilizada
+    @PostMapping("/check-password-history")
+    public ResponseEntity<String> checkPasswordHistory(@RequestParam int id_usuario, @RequestParam String contrasena) {
+        try {
+            boolean isPasswordUsed = usuarioService.checkPasswordHistory(id_usuario, contrasena);
+            if (isPasswordUsed) {
+                return ResponseEntity.ok("La contraseña ya fue utilizada.");
             } else {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("No se pudo recuperar la contraseña.");
+                return ResponseEntity.ok("La contraseña no ha sido utilizada.");
             }
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);

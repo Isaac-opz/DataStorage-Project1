@@ -5,13 +5,17 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "historial_contrasena")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 public class Contrasena {
 
     @Id
@@ -33,18 +37,19 @@ public class Contrasena {
     @Enumerated(EnumType.STRING)
     private EstadoContrasena estado;
 
-    public String getPassword() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getPassword'");
+    // Métodos para establecer y obtener los atributos
+    public void setUserId(Integer userId) {
+        if (this.usuario == null) {
+            this.usuario = new Usuario();
+        }
+        this.usuario.setIdUsuario(userId);
     }
 
-    public void setUserId(Integer userId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setUserId'");
+    public String getPassword() {
+        return this.contrasena;
     }
 
     public void setPassword(String encodedPassword) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setPassword'");
+        this.contrasena = encodedPassword;
     }
 }
