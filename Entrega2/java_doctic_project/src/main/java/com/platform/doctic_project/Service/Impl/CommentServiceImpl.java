@@ -26,6 +26,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Autowired UsuarioRepository  usuarioRepository;
 
+
     @Override
     public Comentario addComment(Comentario comentario) {
         // Verificar que el documento exista
@@ -53,19 +54,44 @@ public class CommentServiceImpl implements CommentService {
         return nuevoComentario;
     }
 
-
+    
     @Override
     public Comentario replyToComment(Integer parentCommentId, Comentario comentario) {
         // Verificar que el comentario padre exista
         Comentario comentarioPadre = comentarioRepository.findById(parentCommentId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Comentario no encontrado con ID: " + parentCommentId));
 
+        // Verificar que el documento exista
+        Documento documento = documentoRepository.findById(comentario.getDocumento().getIdDocumento())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + comentario.getDocumento().getIdDocumento()));
+
+        // Verificar que el usuario exista
+        Usuario usuario = usuarioRepository.findById(comentario.getUsuario().getIdUsuario())
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + comentario.getUsuario().getIdUsuario()));
+
+        // Asignar la fecha actual si no se proporciona
+        if (comentario.getFechaComentario() == null) {
+            comentario.setFechaComentario(LocalDateTime.now());
+        }
+
         // Establecer el comentario padre
         comentario.setMetacomentario(comentarioPadre);
 
+        // Asignar el documento y usuario al comentario
+        comentario.setDocumento(documento);
+        comentario.setUsuario(usuario);
+
         // Guardar la respuesta
-        return addComment(comentario);
+        Comentario nuevoComentario = comentarioRepository.save(comentario);
+
+        // Actualizar el contador de comentarios del documento
+        documento.setNumComentarios(documento.getNumComentarios() + 1);
+        documentoRepository.save(documento);
+
+        return nuevoComentario;
     }
+
+
 
     @Override
     public List<Comentario> listDocumentComments(Integer documentId) {
@@ -77,18 +103,24 @@ public class CommentServiceImpl implements CommentService {
         return comentarioRepository.findByDocumento(documento);
     }
 
+
     @Override
     public void deleteComment(Integer commentId) {
         // Verificar que el comentario exista
         Comentario comentario = comentarioRepository.findById(commentId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Comentario no encontrado con ID: " + commentId));
 
+        // Obtener el documento asociado al comentario
+        Documento documento = comentario.getDocumento();
+
         // Eliminar el comentario
         comentarioRepository.delete(comentario);
 
         // Actualizar el contador de comentarios del documento
-        Documento documento = comentario.getDocumento();
-        documento.setNumComentarios(documento.getNumComentarios() - 1);
-        documentoRepository.save(documento);
+        if (documento != null) {
+            documento.setNumComentarios(documento.getNumComentarios() - 1);
+            documentoRepository.save(documento);
+        }
     }
+
 }
