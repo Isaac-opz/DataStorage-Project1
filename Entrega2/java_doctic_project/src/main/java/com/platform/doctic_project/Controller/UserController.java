@@ -1,8 +1,11 @@
+// ESTE ES DE   USUARIOS Y GESTION DE CONTRASENAS
+
 package com.platform.doctic_project.Controller;
+
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,8 +15,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.platform.doctic_project.Model.Usuario;
 import com.platform.doctic_project.Service.PasswordService;
 import com.platform.doctic_project.Service.UserService;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
@@ -35,7 +36,7 @@ public class UserController {
                 return ResponseEntity.badRequest().body("La contraseña inicial no puede estar vacía.");
             }
             Usuario newUser = userService.createUser(usuario);
-            return ResponseEntity.ok(newUser);
+            return ResponseEntity.ok(newUser); // Devuelve el nuevo usuario con su información
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
@@ -43,33 +44,43 @@ public class UserController {
         }
     }
 
-    @GetMapping("/all") // Endpoint para obtener todos los usuarios
-    public ResponseEntity<List<Usuario>> getAllUsers() {
-        List<Usuario> users = userService.getAllUsers();
-        return ResponseEntity.ok(users);
-    }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestParam String nombreUsuario, @RequestParam String contrasena) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> loginRequest) {
         try {
-            Usuario user = userService.authenticateUser(nombreUsuario, contrasena);
-            return ResponseEntity.ok(user);
+            String nombreUsuario = loginRequest.get("nombreUsuario");
+            String contrasena = loginRequest.get("contrasena");
+            
+            // Autenticar el usuario
+            Usuario usuario = userService.authenticateUser(nombreUsuario, contrasena);
+            
+            // Retornar mensaje de éxito
+            String mensaje = "Hola " + usuario.getNombreUsuario() + ", has accedido a tu cuenta en Doctic.";
+            return ResponseEntity.ok(Map.of("message", mensaje));
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(401).body(e.getMessage());
+            // Si hay algún error en la autenticación
+            return ResponseEntity.status(401).body(Map.of("error", e.getMessage()));
+        } catch (Exception e) {
+            // Para cualquier otro error
+            return ResponseEntity.status(500).body(Map.of("error", "Error al intentar iniciar sesión."));
         }
     }
 
-    @PostMapping("/recover-password")
-    public ResponseEntity<?> recoverPassword(@RequestParam String nombreUsuario, @RequestParam String respuestaSecreta) {
-        try {
-            boolean success = passwordService.recoverPassword(nombreUsuario, respuestaSecreta);
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
+            String nombreUsuario = request.get("nombreUsuario");
+            String contrasenaActual = request.get("contrasenaActual");
+            String respuestaSecreta = request.get("respuestaSecreta");
+            String nuevaContrasena = request.get("nuevaContrasena");
+
+            boolean success = passwordService.changePassword(nombreUsuario, contrasenaActual, respuestaSecreta, nuevaContrasena);
+
             if (success) {
-                return ResponseEntity.ok("Contraseña recuperada con éxito. Revisa tu correo electrónico.");
+                return ResponseEntity.ok("La contraseña ha sido cambiada exitosamente.");
             } else {
-                return ResponseEntity.badRequest().body("Respuesta secreta incorrecta.");
+                return ResponseEntity.badRequest().body("Error al cambiar la contraseña.");
             }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body("Error al recuperar la contraseña.");
-        }
     }
+
+
 }

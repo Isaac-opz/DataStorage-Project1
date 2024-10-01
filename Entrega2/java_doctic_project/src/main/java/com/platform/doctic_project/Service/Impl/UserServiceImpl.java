@@ -2,7 +2,12 @@ package com.platform.doctic_project.Service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List; // Importa la lista correctamente desde java.util
+import java.util.Optional;
+
+import com.platform.doctic_project.Exception.RecursoNoEncontradoException;
 import com.platform.doctic_project.Model.HistorialContrasena;
 import com.platform.doctic_project.Model.HistorialContrasena.Estado;
 import com.platform.doctic_project.Model.Usuario;
@@ -26,39 +31,44 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("El nombre de usuario o correo electrónico ya están en uso.");
         }
 
-        // Guardar el usuario sin contraseñas
+        // Guardar el usuario
         Usuario nuevoUsuario = usuarioRepository.save(usuario);
 
-        // Obtener la contraseña inicial desde el usuario
-        String contrasenaInicial = usuario.getContrasenaInicial();
-
-        if (contrasenaInicial == null || contrasenaInicial.isEmpty()) {
+        // Crear y guardar el historial de contraseñas con la contraseña inicial
+        if (usuario.getContrasena() == null || usuario.getContrasena().isEmpty()) {
             throw new IllegalArgumentException("La contraseña inicial no puede estar vacía.");
         }
 
-        // Crear y guardar el historial de contraseñas con la contraseña inicial
         HistorialContrasena historial = new HistorialContrasena();
         historial.setUsuario(nuevoUsuario);
-        historial.setContrasena(contrasenaInicial);
-        historial.setEstado(Estado.activa);
+        historial.setContrasena(usuario.getContrasena());
+        historial.setEstado(HistorialContrasena.Estado.activa); // Estado inicial de la contraseña
+        historial.setFechaCambio(LocalDateTime.now()); // Fecha del cambio de contraseña
 
         historialContrasenaRepository.save(historial);
-
-        // Agregar el historial al usuario
-        nuevoUsuario.getHistorialesContrasena().add(historial);
 
         return nuevoUsuario;
     }
 
     @Override
     public Usuario authenticateUser(String nombreUsuario, String contrasena) {
+        // Verificar si el usuario existe
         Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
-                .orElseThrow(() -> new IllegalArgumentException("Usuario no encontrado."));
-        String contrasenaActiva = usuario.getContrasenaActiva();
-        if (contrasenaActiva != null && contrasenaActiva.equals(contrasena)) {
-            return usuario;
+                .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado."));
+
+        // Verificar si la contraseña ingresada es la activa
+        Optional<HistorialContrasena> contrasenaActivaOpt = historialContrasenaRepository.findByUsuarioAndEstado(usuario, HistorialContrasena.Estado.activa);
+        if (contrasenaActivaOpt.isPresent()) {
+            HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
+            
+            // Comparar la contraseña ingresada con la contraseña activa
+            if (contrasenaActiva.getContrasena().equals(contrasena)) {
+                return usuario;
+            } else {
+                throw new IllegalArgumentException("La contraseña ingresada es incorrecta.");
+            }
         } else {
-            throw new IllegalArgumentException("Contraseña incorrecta.");
+            throw new IllegalArgumentException("No se encontró una contraseña activa para este usuario.");
         }
     }
 

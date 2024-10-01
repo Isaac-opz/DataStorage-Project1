@@ -23,33 +23,47 @@ public class PasswordServiceImpl implements PasswordService {
     private UsuarioRepository usuarioRepository;
 
     @Override
-    public boolean recoverPassword(String nombreUsuario, String respuestaSecreta) {
+    public boolean changePassword(String nombreUsuario, String contrasenaActual, String respuestaSecreta, String nuevaContrasena) {
+        // Verificar si el usuario existe
         Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado."));
 
-        if (usuario.getRespuestaSecreta().equals(respuestaSecreta)) {
-            // Generar una nueva contraseña temporal o restablecer la contraseña
-            String nuevaContrasena = generarContrasenaTemporal();
-
-            // Desactivar la contraseña anterior
-            Optional<HistorialContrasena> contrasenaActivaOpt = historialContrasenaRepository.findByUsuarioAndEstado(usuario, Estado.activa);
-            if (contrasenaActivaOpt.isPresent()) {
-                HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
-                contrasenaActiva.setEstado(Estado.inactiva);
-                historialContrasenaRepository.save(contrasenaActiva);
+        // Verificar la contraseña actual
+        Optional<HistorialContrasena> contrasenaActivaOpt = historialContrasenaRepository.findByUsuarioAndEstado(usuario, Estado.activa);
+        if (contrasenaActivaOpt.isPresent()) {
+            HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
+            if (!contrasenaActiva.getContrasena().equals(contrasenaActual)) {
+                throw new IllegalArgumentException("La contraseña actual es incorrecta.");
             }
-
-            // Guardar la nueva contraseña en el historial
-            savePasswordToHistory(usuario.getIdUsuario(), nuevaContrasena);
-
-            // Enviar la nueva contraseña al correo electrónico del usuario (simulado)
-            enviarCorreoRecuperacion(usuario.getCorreoElectronico(), nuevaContrasena);
-
-            return true;
         } else {
-            return false;
+            throw new IllegalArgumentException("No se encontró una contraseña activa para el usuario.");
         }
+
+        // Verificar la respuesta secreta
+        if (!usuario.getRespuestaSecreta().equals(respuestaSecreta)) {
+            throw new IllegalArgumentException("La respuesta secreta es incorrecta.");
+        }
+
+        // Cambiar la contraseña del usuario
+        usuario.setContrasena(nuevaContrasena);  // Actualizar el campo de la nueva contraseña en el usuario
+        usuarioRepository.save(usuario);  // Guardar el usuario con la nueva contraseña
+
+        // Desactivar la contraseña actual en el historial de contraseñas
+        if (contrasenaActivaOpt.isPresent()) {
+            HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
+            contrasenaActiva.setEstado(Estado.inactiva);  // Desactivar la contraseña actual
+            historialContrasenaRepository.save(contrasenaActiva);  // Guardar el historial actualizado
+        }
+
+        // Registrar la nueva contraseña en el historial de contraseñas
+        HistorialContrasena nuevoHistorial = new HistorialContrasena(usuario, nuevaContrasena, Estado.activa);
+        historialContrasenaRepository.save(nuevoHistorial);  // Guardar la nueva contraseña en el historial
+
+        return true;
     }
+
+
+
 
     @Override
     public void savePasswordToHistory(Integer userId, String password) {
