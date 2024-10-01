@@ -2,7 +2,7 @@ package com.platform.doctic_project.Service.Impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
+import java.util.List; // Importa la lista correctamente desde java.util
 import com.platform.doctic_project.Model.HistorialContrasena;
 import com.platform.doctic_project.Model.HistorialContrasena.Estado;
 import com.platform.doctic_project.Model.Usuario;
@@ -60,5 +60,15 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new IllegalArgumentException("Contraseña incorrecta.");
         }
+    }
+
+    @Override
+    public boolean existsByUsername(String username) {
+        return usuarioRepository.existsByNombreUsuario(username); // Utiliza el repositorio para verificar
+    }
+
+    @Override
+    public List<Usuario> getAllUsers() {
+        return usuarioRepository.findAll(); // Devuelve todos los usuarios
     }
 }

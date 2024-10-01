@@ -43,6 +43,9 @@ public class Usuario {
     @Column(name = "respuesta_secreta", nullable = false)
     private String respuestaSecreta;
 
+    @Column(name = "contrasena", nullable = false) // Asegúrate de que este campo sea persistente
+    private String contrasena;
+
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<HistorialContrasena> historialesContrasena = new ArrayList<>();
@@ -185,6 +188,14 @@ public class Usuario {
 
     public void setValoraciones(List<Valoracion> valoraciones) {
         this.valoraciones = valoraciones;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public String getContrasenaInicial() {
