@@ -1,5 +1,7 @@
 package com.platform.doctic_project.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -22,11 +24,15 @@ public class AutorDocumento {
 
     @ManyToOne
     @JoinColumn(name = "id_documento", nullable = false)
+    @JsonIgnore
     private Documento documento;
+
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
+    @JsonIgnore
     private Usuario usuario;
+
 
     @Enumerated(EnumType.STRING)
     @Column(name = "publico", nullable = false, columnDefinition = "ENUM('Si', 'No') DEFAULT 'Si'")

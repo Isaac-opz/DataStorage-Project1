@@ -3,6 +3,8 @@ package com.platform.doctic_project.Model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -65,7 +67,9 @@ public class Documento {
     private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "documento", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<AutorDocumento> autores;
+
 
     @OneToMany(mappedBy = "documento", cascade = CascadeType.ALL)
     private List<Descarga> descargas;
