@@ -30,7 +30,7 @@ public class DocumentController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping("/create")
+    @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
     public ResponseEntity<Documento> createDocument(@RequestBody Documento documento, @RequestParam Integer userId) {
         Documento newDocument = documentService.createDocument(documento, userId);
         return ResponseEntity.ok(newDocument);
