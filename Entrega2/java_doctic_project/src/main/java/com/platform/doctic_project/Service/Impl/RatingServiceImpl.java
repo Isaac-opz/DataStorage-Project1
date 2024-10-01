@@ -1,7 +1,7 @@
 package com.platform.doctic_project.Service.Impl;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
+
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,32 +61,20 @@ public class RatingServiceImpl implements RatingService {
         }
 
         // Guardar la valoración
-        valoracionRepository.save(valoracion);
-
-        // Actualizar la valoración promedio del documento
-        Double promedio = calculateAverageRating(documentId);
-        documento.setValoracion(promedio);
-        documentoRepository.save(documento);
-
-        return valoracion;
+        return valoracionRepository.save(valoracion);
     }
-
-    @Override
-    public Double calculateAverageRating(Integer documentId) {
+    public List<Valoracion> listDocumentRatings(Integer documentId) {
         // Verificar si el documento existe
         Documento documento = documentoRepository.findById(documentId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + documentId));
-
+    
         // Obtener todas las valoraciones del documento
-        Double promedio = valoracionRepository.findByDocumento(documento).stream()
-                .mapToInt(Valoracion::getEstrellas)
-                .average()
-                .orElse(0.0);
-
-        // Redondear a un decimal
-        BigDecimal bd = BigDecimal.valueOf(promedio);
-        bd = bd.setScale(1, RoundingMode.HALF_UP);
-
-        return bd.doubleValue();
+        List<Valoracion> valoraciones = valoracionRepository.findByDocumento(documento);
+    
+        if (valoraciones.isEmpty()) {
+            throw new RecursoNoEncontradoException("Este documento no ha sido valorado aún.");
+        }
+    
+        return valoraciones;
     }
 }
