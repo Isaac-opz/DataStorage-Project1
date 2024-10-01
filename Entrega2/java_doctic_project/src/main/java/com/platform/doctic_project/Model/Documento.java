@@ -57,6 +57,10 @@ public class Documento {
     @JoinColumn(name = "id_categoria", nullable = false)
     private Categoria categoria;
 
+    @ManyToOne
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
     @OneToMany(mappedBy = "documento", cascade = CascadeType.ALL)
     private List<Comentario> comentarios;
 
@@ -210,5 +214,13 @@ public class Documento {
     
     public void setNumVistas(Integer numVistas) {
         this.numVistas = numVistas;
+    }
+    
+    public Usuario getUsuario() {
+        return usuario;
+    }
+    
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
     }
 }
