@@ -39,7 +39,16 @@ public class DocumentServiceImpl implements DocumentService {
         // Verificar que el usuario exista
         Usuario usuario = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + userId));
-    
+        
+        // Validaciones del documento
+        if (documento.getNombreDocumento() == null || documento.getNombreDocumento().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del documento no puede ser nulo o vacío.");
+        }
+        
+        if (documento.getUrl() == null || documento.getUrl().isEmpty()) {
+            throw new IllegalArgumentException("La URL del documento no puede ser nula o vacía.");
+        }
+        
         // Asignar el usuario al documento
         documento.setUsuario(usuario);
     

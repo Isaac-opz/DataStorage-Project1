@@ -1,7 +1,6 @@
 package com.platform.doctic_project.Model;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,13 +30,19 @@ public class Descarga {
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
-    // Constructor para inicializar fechaHora
+    // Constructor por defecto
     public Descarga() {
         this.fechaHora = LocalDateTime.now();
     }
 
-    // Getters y Setters
+    // Constructor con parámetros (opcional)
+    public Descarga(Documento documento, Usuario usuario) {
+        this.documento = documento;
+        this.usuario = usuario;
+        this.fechaHora = LocalDateTime.now(); // Inicializa con la fecha/hora actual
+    }
 
+    // Getters y Setters
     public Integer getIdDescarga() {
         return idDescarga;
     }
@@ -68,5 +73,15 @@ public class Descarga {
 
     public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
+    }
+
+    @Override
+    public String toString() {
+        return "Descarga{" +
+                "idDescarga=" + idDescarga +
+                ", documento=" + documento +
+                ", usuario=" + usuario +
+                ", fechaHora=" + fechaHora +
+                '}';
     }
 }

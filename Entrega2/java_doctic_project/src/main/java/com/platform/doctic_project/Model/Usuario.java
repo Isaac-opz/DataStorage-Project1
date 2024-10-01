@@ -51,6 +51,7 @@ public class Usuario {
     private List<HistorialContrasena> historialesContrasena = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
