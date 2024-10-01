@@ -1,5 +1,6 @@
 package com.platform.doctic_project.Controller;
 
+import java.util.HashMap;
 import java.util.List;
 
 //ESTE ES DE DESCARGAS, VISUALIZACIONES Y COMENTARIOS
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;  // IMPORTAR ESTO
 
 import com.platform.doctic_project.Model.Comentario;
 import com.platform.doctic_project.Model.Descarga;
@@ -60,10 +62,17 @@ public class InteractionController {
     }
 
     @PostMapping("/comment")
-    public ResponseEntity<Comentario> addComment(@RequestBody Comentario comentario) {
-        Comentario newComment = commentService.addComment(comentario);
-        return ResponseEntity.ok(newComment);
+    public ResponseEntity<Map<String, Object>> addComment(@RequestBody Comentario comentario) {
+        Comentario nuevoComentario = commentService.addComment(comentario);
+
+        // Crear un mapa de respuesta con el mensaje de éxito y el comentario guardado
+        Map<String, Object> response = new HashMap<>();  // Asegúrate de usar HashMap correctamente
+        response.put("message", "Comentario guardado exitosamente");
+        response.put("comentario", nuevoComentario);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/reply")
     public ResponseEntity<Comentario> replyToComment(@RequestParam Integer parentCommentId, @RequestBody Comentario comentario) {
