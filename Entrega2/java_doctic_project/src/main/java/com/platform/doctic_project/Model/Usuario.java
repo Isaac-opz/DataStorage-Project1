@@ -3,6 +3,7 @@ package com.platform.doctic_project.Model;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
@@ -50,6 +51,7 @@ public class Usuario {
     private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
+    @JsonIgnore
     private List<AutorDocumento> documentosAutor;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL)
