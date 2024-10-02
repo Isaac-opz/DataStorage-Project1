@@ -25,30 +25,34 @@ public class UserServiceImpl implements UserService {
     private HistorialContrasenaRepository historialContrasenaRepository;
 
     @Override
-    public Usuario createUser(Usuario usuario) {
-        if (usuarioRepository.existsByNombreUsuarioOrCorreoElectronico(usuario.getNombreUsuario(),
-                usuario.getCorreoElectronico())) {
+    public Usuario createUser(Usuario usuario, String contrasena) {
+        // Verificar si el nombre de usuario o el correo electrónico ya están en uso
+        if (usuarioRepository.existsByNombreUsuarioOrCorreoElectronico(usuario.getNombreUsuario(), usuario.getCorreoElectronico())) {
             throw new IllegalArgumentException("El nombre de usuario o correo electrónico ya están en uso.");
         }
 
-        // Guardar el usuario
-        Usuario nuevoUsuario = usuarioRepository.save(usuario);
-
-        // Crear y guardar el historial de contraseñas con la contraseña inicial
-        if (usuario.getContrasena() == null || usuario.getContrasena().isEmpty()) {
+        // Verificar si la contraseña proporcionada es válida
+        if (contrasena == null || contrasena.isEmpty()) {
             throw new IllegalArgumentException("La contraseña inicial no puede estar vacía.");
         }
 
+        // Guardar el nuevo usuario sin la contraseña (porque la contraseña se gestiona en el historial)
+        Usuario nuevoUsuario = usuarioRepository.save(usuario);
+
+        // Crear y guardar el historial de contraseñas con la contraseña proporcionada
         HistorialContrasena historial = new HistorialContrasena();
         historial.setUsuario(nuevoUsuario);
-        historial.setContrasena(usuario.getContrasena());
-        historial.setEstado(HistorialContrasena.Estado.activa); // Estado inicial de la contraseña
-        historial.setFechaCambio(LocalDateTime.now()); // Fecha del cambio de contraseña
+        historial.setContrasena(contrasena); // Asignar la contraseña desde el argumento proporcionado
+        historial.setEstado(HistorialContrasena.Estado.activa); // Establecer como contraseña activa
+        historial.setFechaCambio(LocalDateTime.now()); // Establecer la fecha de creación
 
+        // Guardar el historial de contraseñas
         historialContrasenaRepository.save(historial);
 
         return nuevoUsuario;
     }
+
+
 
     @Override
     public Usuario authenticateUser(String nombreUsuario, String contrasena) {

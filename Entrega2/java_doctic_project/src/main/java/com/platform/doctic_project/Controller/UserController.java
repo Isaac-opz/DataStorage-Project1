@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.platform.doctic_project.Model.Usuario;
@@ -27,22 +26,30 @@ public class UserController {
     private PasswordService passwordService;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Usuario usuario) {
+    public ResponseEntity<?> registerUser(@RequestBody Map<String, Object> userRequest) {
         try {
-            if (userService.existsByUsername(usuario.getNombreUsuario())) {
-                return ResponseEntity.status(409).body("El nombre de usuario ya está en uso.");
-            }
-            if (usuario.getContrasena() == null || usuario.getContrasena().isEmpty()) {
-                return ResponseEntity.badRequest().body("La contraseña inicial no puede estar vacía.");
-            }
-            Usuario newUser = userService.createUser(usuario);
-            return ResponseEntity.ok(newUser); // Devuelve el nuevo usuario con su información
+            // Obtener los datos del usuario y la contraseña del request
+            Usuario usuario = new Usuario();
+            usuario.setNombreUsuario((String) userRequest.get("nombreUsuario"));
+            usuario.setCorreoElectronico((String) userRequest.get("correoElectronico"));
+            usuario.setCiudad((String) userRequest.get("ciudad"));
+            usuario.setDepartamento((String) userRequest.get("departamento"));
+            usuario.setPreguntaSecreta((String) userRequest.get("preguntaSecreta"));
+            usuario.setRespuestaSecreta((String) userRequest.get("respuestaSecreta"));
+
+            // Obtener la contraseña
+            String contrasena = (String) userRequest.get("contrasena");
+
+            // Registrar al usuario y guardar la contraseña en el historial
+            Usuario newUser = userService.createUser(usuario, contrasena);
+            return ResponseEntity.ok(newUser);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(500).body("Error al registrar el usuario.");
         }
     }
+
 
 
     @PostMapping("/login")
@@ -67,20 +74,26 @@ public class UserController {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> request) {
-            String nombreUsuario = request.get("nombreUsuario");
-            String contrasenaActual = request.get("contrasenaActual");
-            String respuestaSecreta = request.get("respuestaSecreta");
-            String nuevaContrasena = request.get("nuevaContrasena");
+    public ResponseEntity<?> changePassword(@RequestBody Map<String, String> passwordRequest) {
+        try {
+            String nombreUsuario = passwordRequest.get("nombreUsuario");
+            String contrasenaActual = passwordRequest.get("contrasenaActual");
+            String respuestaSecreta = passwordRequest.get("respuestaSecreta");
+            String nuevaContrasena = passwordRequest.get("nuevaContrasena");
 
             boolean success = passwordService.changePassword(nombreUsuario, contrasenaActual, respuestaSecreta, nuevaContrasena);
-
             if (success) {
-                return ResponseEntity.ok("La contraseña ha sido cambiada exitosamente.");
+                return ResponseEntity.ok("Contraseña cambiada exitosamente.");
             } else {
-                return ResponseEntity.badRequest().body("Error al cambiar la contraseña.");
+                return ResponseEntity.badRequest().body("No se pudo cambiar la contraseña.");
             }
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Error al cambiar la contraseña.");
+        }
     }
+
 
 
 }

@@ -28,7 +28,7 @@ public class PasswordServiceImpl implements PasswordService {
         Usuario usuario = usuarioRepository.findByNombreUsuario(nombreUsuario)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado."));
 
-        // Verificar la contraseña actual
+        // Verificar la contraseña actual desde el historial de contraseñas
         Optional<HistorialContrasena> contrasenaActivaOpt = historialContrasenaRepository.findByUsuarioAndEstado(usuario, Estado.activa);
         if (contrasenaActivaOpt.isPresent()) {
             HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
@@ -44,19 +44,13 @@ public class PasswordServiceImpl implements PasswordService {
             throw new IllegalArgumentException("La respuesta secreta es incorrecta.");
         }
 
-        // Cambiar la contraseña del usuario
-        usuario.setContrasena(nuevaContrasena);  // Actualizar el campo de la nueva contraseña en el usuario
-        usuarioRepository.save(usuario);  // Guardar el usuario con la nueva contraseña
-
         // Desactivar la contraseña actual en el historial de contraseñas
-        if (contrasenaActivaOpt.isPresent()) {
-            HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
-            contrasenaActiva.setEstado(Estado.inactiva);  // Desactivar la contraseña actual
-            historialContrasenaRepository.save(contrasenaActiva);  // Guardar el historial actualizado
-        }
+        HistorialContrasena contrasenaActiva = contrasenaActivaOpt.get();
+        contrasenaActiva.setEstado(HistorialContrasena.Estado.inactiva);  // Desactivar la contraseña actual
+        historialContrasenaRepository.save(contrasenaActiva);  // Guardar el historial actualizado
 
         // Registrar la nueva contraseña en el historial de contraseñas
-        HistorialContrasena nuevoHistorial = new HistorialContrasena(usuario, nuevaContrasena, Estado.activa);
+        HistorialContrasena nuevoHistorial = new HistorialContrasena(usuario, nuevaContrasena, HistorialContrasena.Estado.activa);
         historialContrasenaRepository.save(nuevoHistorial);  // Guardar la nueva contraseña en el historial
 
         return true;
