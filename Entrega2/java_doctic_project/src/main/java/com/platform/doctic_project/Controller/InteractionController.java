@@ -55,6 +55,7 @@ public class InteractionController {
         return ResponseEntity.ok().build();
     }
 
+
     @GetMapping("/views/{userId}")
     public ResponseEntity<List<VistoPor>> getUserViewHistory(@PathVariable Integer userId) {
         List<VistoPor> viewHistory = viewService.getUserViewHistory(userId);

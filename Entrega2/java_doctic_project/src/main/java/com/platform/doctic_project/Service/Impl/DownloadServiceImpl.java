@@ -36,6 +36,11 @@ public class DownloadServiceImpl implements DownloadService {
         Documento documento = documentoRepository.findById(documentId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + documentId));
 
+        // Verificar si el documento es público
+        if (documento.getVisibilidad() != Documento.Visibilidad.publico) {
+            throw new IllegalArgumentException("El documento no está disponible para descarga porque es privado.");
+        }
+
         // Registrar la descarga
         Descarga descarga = new Descarga();
         descarga.setUsuario(usuario);

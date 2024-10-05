@@ -77,9 +77,6 @@ public class DocumentServiceImpl implements DocumentService {
     
         return nuevoDocumento;
     }
-    
-    
-
 
 
     @Override
@@ -97,9 +94,9 @@ public class DocumentServiceImpl implements DocumentService {
         // Verificar que el documento exista
         Documento documento = documentoRepository.findById(documentId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + documentId));
-
+    
         try {
-            // Asegurar que el valor es 'publico' o 'privado'
+            // Asegurar que el valor es 'publico' o 'privado' basado en el enum de visibilidad
             Visibilidad nuevaVisibilidad = Visibilidad.valueOf(visibilidad.toLowerCase());
             documento.setVisibilidad(nuevaVisibilidad);
             documentoRepository.save(documento);
@@ -107,4 +104,6 @@ public class DocumentServiceImpl implements DocumentService {
             throw new IllegalArgumentException("Valor de visibilidad inválido: " + visibilidad);
         }
     }
+    
+
 }

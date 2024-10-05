@@ -36,6 +36,11 @@ public class ViewServiceImpl implements ViewService {
         Documento documento = documentoRepository.findById(documentId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Documento no encontrado con ID: " + documentId));
 
+        // Verificar la visibilidad del documento
+        if (documento.getVisibilidad() == Documento.Visibilidad.privado) {
+            throw new IllegalArgumentException("El documento es privado y no se puede visualizar.");
+        }
+
         // Registrar la visualización
         VistoPor vistoPor = new VistoPor();
         vistoPor.setUsuario(usuario);
@@ -46,6 +51,7 @@ public class ViewServiceImpl implements ViewService {
         documento.setNumVistas(documento.getNumVistas() + 1);
         documentoRepository.save(documento);
     }
+
 
     @Override
     public List<VistoPor> getUserViewHistory(Integer userId) {

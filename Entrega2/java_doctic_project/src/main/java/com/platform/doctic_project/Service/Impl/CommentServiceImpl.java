@@ -36,6 +36,11 @@ public class CommentServiceImpl implements CommentService {
         // Verificar que el usuario exista
         Usuario usuario = usuarioRepository.findById(comentario.getUsuario().getIdUsuario())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + comentario.getUsuario().getIdUsuario()));
+        
+        // Verificar si el documento es público
+        if (documento.getVisibilidad() != Documento.Visibilidad.publico) {
+            throw new IllegalArgumentException("El documento no está disponible para comentar porque es privado.");
+        }
 
         // Asignar la fecha actual si no se proporciona
         if (comentario.getFechaComentario() == null) {
@@ -68,6 +73,11 @@ public class CommentServiceImpl implements CommentService {
         // Verificar que el usuario exista
         Usuario usuario = usuarioRepository.findById(comentario.getUsuario().getIdUsuario())
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + comentario.getUsuario().getIdUsuario()));
+        
+        // Verificar si el documento es público
+        if (documento.getVisibilidad() != Documento.Visibilidad.publico) {
+            throw new IllegalArgumentException("El comentario no está disponible para comentar porque su documento es privado.");
+        }
 
         // Asignar la fecha actual si no se proporciona
         if (comentario.getFechaComentario() == null) {
