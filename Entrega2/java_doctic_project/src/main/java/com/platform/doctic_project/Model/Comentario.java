@@ -3,7 +3,7 @@ package com.platform.doctic_project.Model;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
+import com.fasterxml.jackson.annotation.JsonFilter;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -18,6 +18,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "comentario")
+@JsonFilter("comentarioFilter")
 public class Comentario {
 
     @Id
@@ -27,6 +28,7 @@ public class Comentario {
 
     @ManyToOne
     @JoinColumn(name = "id_documento", nullable = false)
+    @JsonFilter("documentoFilter")
     private Documento documento;
 
     @ManyToOne
