@@ -2,13 +2,14 @@ package com.platform.doctic_project.Controller;
 
 //ESTE ES DE DOCUMENTOS Y CATEGORIAS
 import java.util.HashMap;
-import java.util.Map; 
-
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import com.platform.doctic_project.Exception.RecursoNoEncontradoException;
 import com.platform.doctic_project.Model.Categoria;
 import com.platform.doctic_project.Model.Documento;
@@ -34,35 +37,53 @@ public class DocumentController {
     @Autowired
     private CategoryService categoryService;
 
-    @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Map<String, Object>> createDocument(@RequestBody Documento documento, @RequestParam Integer userId) {
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<MappingJacksonValue> createDocument(@RequestBody Documento documento, @RequestParam Integer userId) {
         Documento newDocument = documentService.createDocument(documento, userId);
+
+        // Crear el filtro que excluye ciertas propiedades
+        SimpleFilterProvider filters = new SimpleFilterProvider()
+                .addFilter("documentoFilter", SimpleBeanPropertyFilter.serializeAllExcept("usuario", "comentarios", "categoria"));
 
         // Crear un mapa de respuesta
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Documento creado exitosamente");
         response.put("documento", newDocument);
 
-        // Devolver la respuesta con el mensaje de éxito y el nuevo documento
-        return ResponseEntity.ok(response);
+        // Aplicar el filtro al mapa completo
+        MappingJacksonValue mapping = new MappingJacksonValue(response);
+        mapping.setFilters(filters);
+
+        // Devolver la respuesta con el mapa filtrado
+        return ResponseEntity.ok(mapping);
     }
-   @GetMapping("/user/{userId}")
-    public ResponseEntity<Map<String, Object>> getUserDocuments(@PathVariable Integer userId) {
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<MappingJacksonValue> getUserDocuments(@PathVariable Integer userId) {
         try {
             List<Documento> documents = documentService.listUserDocuments(userId);
-
+    
+            // Crear el filtro que excluye ciertas propiedades
+            SimpleFilterProvider filters = new SimpleFilterProvider()
+                    .addFilter("documentoFilter", SimpleBeanPropertyFilter.serializeAllExcept("usuario", "comentarios", "categoria"));
+    
             // Crear un mapa de respuesta con los documentos
             Map<String, Object> response = new HashMap<>();
             response.put("message", "Documentos obtenidos exitosamente");
             response.put("documentos", documents);
-
-            return ResponseEntity.ok(response);
+    
+            // Aplicar el filtro al mapa completo
+            MappingJacksonValue mapping = new MappingJacksonValue(response);
+            mapping.setFilters(filters);
+    
+            // Devolver la respuesta con el mapa filtrado
+            return ResponseEntity.ok(mapping);
         } catch (RecursoNoEncontradoException e) {
             // Crear un mapa de respuesta con el mensaje de error
             Map<String, Object> response = new HashMap<>();
             response.put("message", e.getMessage());
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

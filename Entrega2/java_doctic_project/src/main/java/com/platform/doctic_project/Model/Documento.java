@@ -3,6 +3,7 @@ package com.platform.doctic_project.Model;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
@@ -20,6 +21,7 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "documento")
+@JsonFilter("documentoFilter")
 public class Documento {
 
     @Id
