@@ -35,16 +35,37 @@ public class DocumentController {
     private CategoryService categoryService;
 
     @PostMapping(value = "/create", consumes = "application/json", produces = "application/json")
-    public ResponseEntity<Documento> createDocument(@RequestBody Documento documento, @RequestParam Integer userId) {
+    public ResponseEntity<Map<String, Object>> createDocument(@RequestBody Documento documento, @RequestParam Integer userId) {
         Documento newDocument = documentService.createDocument(documento, userId);
-        return ResponseEntity.ok(newDocument);
+
+        // Crear un mapa de respuesta
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Documento creado exitosamente");
+        response.put("documento", newDocument);
+
+        // Devolver la respuesta con el mensaje de éxito y el nuevo documento
+        return ResponseEntity.ok(response);
+    }
+   @GetMapping("/user/{userId}")
+    public ResponseEntity<Map<String, Object>> getUserDocuments(@PathVariable Integer userId) {
+        try {
+            List<Documento> documents = documentService.listUserDocuments(userId);
+
+            // Crear un mapa de respuesta con los documentos
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Documentos obtenidos exitosamente");
+            response.put("documentos", documents);
+
+            return ResponseEntity.ok(response);
+        } catch (RecursoNoEncontradoException e) {
+            // Crear un mapa de respuesta con el mensaje de error
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", e.getMessage());
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Documento>> getUserDocuments(@PathVariable Integer userId) {
-        List<Documento> documents = documentService.listUserDocuments(userId);
-        return ResponseEntity.ok(documents);
-    }
 
     @PutMapping("/visibility/{documentId}")
     public ResponseEntity<Map<String, Object>> updateDocumentVisibility(

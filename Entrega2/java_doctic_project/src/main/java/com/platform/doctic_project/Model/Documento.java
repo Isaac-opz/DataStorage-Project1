@@ -61,13 +61,13 @@ public class Documento {
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
+    @JsonIgnore 
     private Usuario usuario;
 
     @OneToMany(mappedBy = "documento", cascade = CascadeType.ALL)
     private List<Comentario> comentarios;
 
     @OneToMany(mappedBy = "documento", cascade = CascadeType.ALL)
-    @JsonIgnore
     private List<AutorDocumento> autores;
 
 

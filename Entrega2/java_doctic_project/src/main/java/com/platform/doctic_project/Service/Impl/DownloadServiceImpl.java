@@ -58,6 +58,15 @@ public class DownloadServiceImpl implements DownloadService {
         Usuario usuario = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + userId));
 
-        return descargaRepository.findByUsuario(usuario);
+        // Obtener el historial de descargas
+        List<Descarga> historialDescargas = descargaRepository.findByUsuario(usuario);
+        
+        // Verificar si el usuario no tiene descargas
+        if (historialDescargas.isEmpty()) {
+            throw new IllegalArgumentException("El usuario no tiene descargas registradas.");
+        }
+
+        return historialDescargas;
     }
+
 }

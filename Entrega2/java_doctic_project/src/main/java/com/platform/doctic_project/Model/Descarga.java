@@ -1,6 +1,9 @@
 package com.platform.doctic_project.Model;
 
 import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,10 +24,12 @@ public class Descarga {
 
     @ManyToOne
     @JoinColumn(name = "id_documento", nullable = false)
+    @JsonIgnore
     private Documento documento;
 
     @ManyToOne
     @JoinColumn(name = "id_usuario", nullable = false)
+    @JsonIgnore
     private Usuario usuario;
 
     @Column(name = "fecha_hora", nullable = false)

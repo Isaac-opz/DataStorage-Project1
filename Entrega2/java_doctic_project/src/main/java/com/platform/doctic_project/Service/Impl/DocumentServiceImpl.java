@@ -86,8 +86,16 @@ public class DocumentServiceImpl implements DocumentService {
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + userId));
 
         // Obtener los documentos donde el usuario es autor
-        return documentoRepository.findByAutores_Usuario(usuario);
+        List<Documento> documentos = documentoRepository.findByAutores_Usuario(usuario);
+
+        // Verificar si el usuario no tiene documentos
+        if (documentos.isEmpty()) {
+            throw new RecursoNoEncontradoException("El usuario con ID: " + userId + " no ha subido ningún documento.");
+        }
+
+        return documentos;
     }
+
 
     @Override
     public void updateDocumentVisibility(Integer documentId, String visibilidad) {

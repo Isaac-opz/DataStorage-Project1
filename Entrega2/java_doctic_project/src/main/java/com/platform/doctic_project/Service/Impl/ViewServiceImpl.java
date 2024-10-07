@@ -59,6 +59,15 @@ public class ViewServiceImpl implements ViewService {
         Usuario usuario = usuarioRepository.findById(userId)
                 .orElseThrow(() -> new RecursoNoEncontradoException("Usuario no encontrado con ID: " + userId));
 
-        return vistoPorRepository.findByUsuario(usuario);
+        // Obtener el historial de vistas
+        List<VistoPor> historialVistas = vistoPorRepository.findByUsuario(usuario);
+
+        // Verificar si el usuario no tiene vistas
+        if (historialVistas.isEmpty()) {
+            throw new IllegalArgumentException("El usuario no tiene vistas registradas.");
+        }
+
+        return historialVistas;
     }
+
 }

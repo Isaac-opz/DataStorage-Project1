@@ -44,9 +44,15 @@ public class InteractionController {
     }
 
     @GetMapping("/downloads/{userId}")
-    public ResponseEntity<List<Descarga>> getUserDownloadHistory(@PathVariable Integer userId) {
+    public ResponseEntity<Map<String, Object>> getUserDownloadHistory(@PathVariable Integer userId) {
         List<Descarga> downloadHistory = downloadService.getUserDownloadHistory(userId);
-        return ResponseEntity.ok(downloadHistory);
+
+        // Crear el mapa de respuesta
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Historial de descargas obtenido exitosamente");
+        response.put("historialDescargas", downloadHistory);
+
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/view")
@@ -57,10 +63,17 @@ public class InteractionController {
 
 
     @GetMapping("/views/{userId}")
-    public ResponseEntity<List<VistoPor>> getUserViewHistory(@PathVariable Integer userId) {
+    public ResponseEntity<Map<String, Object>> getUserViewHistory(@PathVariable Integer userId) {
         List<VistoPor> viewHistory = viewService.getUserViewHistory(userId);
-        return ResponseEntity.ok(viewHistory);
+
+        // Crear el mapa de respuesta
+        Map<String, Object> response = new HashMap<>();
+        response.put("message", "Historial de vistas obtenido exitosamente");
+        response.put("historialVistas", viewHistory);
+
+        return ResponseEntity.ok(response);
     }
+
 
     @PostMapping("/add")
     public ResponseEntity<Map<String, Object>> addComment(@RequestBody Comentario comentario) {
@@ -74,6 +87,8 @@ public class InteractionController {
         return ResponseEntity.ok(response);
     }
 
+
+
     @PostMapping("/reply/{parentCommentId}")
     public ResponseEntity<Map<String, Object>> replyToComment(@PathVariable Integer parentCommentId, @RequestBody Comentario comentario) {
         Comentario newComment = commentService.replyToComment(parentCommentId, comentario);
@@ -85,20 +100,20 @@ public class InteractionController {
 
         return ResponseEntity.ok(response);
     }
+
     
     @GetMapping("/comments/{documentId}")
     public ResponseEntity<Map<String, Object>> listDocumentComments(@PathVariable Integer documentId) {
         // Llamar al servicio para obtener los comentarios del documento
         List<Comentario> comentarios = commentService.listDocumentComments(documentId);
-    
+
         // Crear un mapa de respuesta con el mensaje de éxito y la lista de comentarios
         Map<String, Object> response = new HashMap<>();
         response.put("message", "Comentarios del documento obtenidos exitosamente");
         response.put("comentarios", comentarios);
-    
+
         return ResponseEntity.ok(response);
     }
-    
 
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<Map<String, Object>> deleteComment(@PathVariable Integer commentId) {
