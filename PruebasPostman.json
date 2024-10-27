@@ -1,0 +1,390 @@
+{
+	"info": {
+		"_postman_id": "ea24502e-5d93-4259-a8e9-21601661bb6f",
+		"name": "Api Rest Mysql",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "38533519"
+	},
+	"item": [
+		{
+			"name": "Categoria",
+			"item": [
+				{
+					"name": "Ver todas las categorias",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/documents/categories"
+					},
+					"response": []
+				},
+				{
+					"name": "Asignar categoria",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"documentId\": 1,\r\n  \"categoryId\": 2\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/documents/assign-category?documentId=1&categoryId=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"documents",
+								"assign-category"
+							],
+							"query": [
+								{
+									"key": "documentId",
+									"value": "1"
+								},
+								{
+									"key": "categoryId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Usuario",
+			"item": [
+				{
+					"name": "Crear usuario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreUsuario\": \"Pedro infante\",\r\n    \"correoElectronico\": \"pedrito@example.com\",\r\n    \"contrasena\": \"Password1234\",\r\n    \"ciudad\": \"Cali\",\r\n    \"departamento\": \"Valle del Cauca\",\r\n    \"preguntaSecreta\": \"Nombre de tu primera mascota\",\r\n    \"respuestaSecreta\": \"Firulais\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/register"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreUsuario\": \"Joan\",\r\n    \"contrasena\": \"Password1234\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar contrasena",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nombreUsuario\": \"Nicolas\",\r\n    \"contrasenaActual\": \"Password1234\",\r\n    \"respuestaSecreta\": \"Firulais\",\r\n    \"nuevaContrasena\": \"Password1235\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/users/change-password"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Documento",
+			"item": [
+				{
+					"name": "Crear documento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombreDocumento\": \"Firebase para dummies\",\r\n  \"descripcion\": \"Descripción del documento\",\r\n  \"url\": \"http://document-url.com\",\r\n  \"visibilidad\": \"publico\",\r\n  \"categoria\": {\r\n    \"idCategoria\": 2\r\n  }\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/documents/create?userId=4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"documents",
+								"create"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "4"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ver documentos subidos por usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/documents/user/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Cambiar estado de documento",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\"visibility\": \"publico\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/documents/visibility/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Comentario",
+			"item": [
+				{
+					"name": "Nuevo comentario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"documento\": {\r\n    \"idDocumento\": 2\r\n  },\r\n  \"usuario\": {\r\n    \"idUsuario\": 1\r\n  },\r\n  \"comentario\": \"Necesito fuentes.\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/interactions/add"
+					},
+					"response": []
+				},
+				{
+					"name": "Responder comentario",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"documento\": {\r\n    \"idDocumento\": 2\r\n  },\r\n  \"usuario\": {\r\n    \"idUsuario\": 1\r\n  },\r\n  \"comentario\": \"Esta es una respuesta al comentario.\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/interactions/reply/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Ver comentarios de un documento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/interactions/comments/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar comentario",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/api/interactions/comment/2"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Visualizacion",
+			"item": [
+				{
+					"name": "Registrar visualizacion",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"documentId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/views/record?documentId=2&userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"views",
+								"record"
+							],
+							"query": [
+								{
+									"key": "documentId",
+									"value": "2"
+								},
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Historial visualizacion por usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/views/history/7"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Valoracion",
+			"item": [
+				{
+					"name": "Valorar documento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 2,\r\n  \"documentId\": 1,\r\n  \"stars\": 5\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/api/recommendations/rate"
+					},
+					"response": []
+				},
+				{
+					"name": "Ver valoraciones por documento",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/recommendations/ratings/11"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Descarga",
+			"item": [
+				{
+					"name": "Descargar ",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"documentId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/interactions/download?documentId=2&userId=1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"interactions",
+								"download"
+							],
+							"query": [
+								{
+									"key": "documentId",
+									"value": "2"
+								},
+								{
+									"key": "userId",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Historial descarga por usuario",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/api/downloads/history/12"
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
