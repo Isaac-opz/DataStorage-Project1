@@ -1,18 +1,33 @@
 package com.backend.doctic_mongo.DTO;
 
+import java.util.Date;
 
-import com.backend.doctic_mongo.Model.ENUM.VisibilidadEnum;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
 public class DocumentoDTO {
-    private String nombreDocumento;
-    private String descripcion;
-    private String url;
-    private VisibilidadEnum visibilidad;
-    // Getters y Setters
+    private String titulo;
+    private String contenido;
+    private Date fechaPublicacion;
+
+    public String getTitulo() {
+        return titulo;
+    }
+
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
+
+    public String getContenido() {
+        return contenido;
+    }
+
+    public void setContenido(String contenido) {
+        this.contenido = contenido;
+    }
+
+    public Date getFechaPublicacion() {
+        return fechaPublicacion;
+    }
+
+    public void setFechaPublicacion(Date fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
+    }
 }
