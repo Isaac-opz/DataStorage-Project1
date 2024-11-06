@@ -1,7 +1,8 @@
 package com.backend.doctic_mongo.Service;
 
-import com.backend.doctic_mongo.Model.DocumentoModel;
+import com.backend.doctic_mongo.DTO.DocumentoDTO;
 
 public interface IDocumentoService {
-    DocumentoModel publicarDocumento(DocumentoModel documento);
+    void publicarDocumento(DocumentoDTO documentoDTO);
+    void descargarDocumento(String documentoId, String usuarioId);
 }

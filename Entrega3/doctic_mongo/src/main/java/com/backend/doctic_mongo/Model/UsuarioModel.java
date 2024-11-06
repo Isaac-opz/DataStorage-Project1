@@ -5,7 +5,7 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+import com.backend.doctic_mongo.Model.ENUM.EstadoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,7 +26,12 @@ public class UsuarioModel {
     private String respuestaSecreta;
     private List<ContrasenaHistorialModel> historialContrasenas;
 
-    public String getIdAsString() {
-        return id != null ? id.toHexString() : null;
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ContrasenaHistorialModel {
+        private String contrasena;
+        private EstadoEnum estado;
+        private java.util.Date fechaCambio;
     }
 }

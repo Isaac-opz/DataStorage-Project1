@@ -1,14 +1,10 @@
 package com.backend.doctic_mongo.Controller;
-import com.backend.doctic_mongo.Service.IDocumentoService;
-import com.backend.doctic_mongo.Model.DocumentoModel;
 
+import com.backend.doctic_mongo.Model.DocumentoModel;
+import com.backend.doctic_mongo.Service.IDocumentoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/documentos")
@@ -18,8 +14,14 @@ public class DocumentoController {
     private IDocumentoService documentoService;
 
     @PostMapping("/publicar")
-    public ResponseEntity<DocumentoModel> publicarDocumento(@RequestBody DocumentoModel documento) {
-        DocumentoModel nuevoDocumento = documentoService.publicarDocumento(documento);
-        return new ResponseEntity<>(nuevoDocumento, HttpStatus.CREATED);
+    public ResponseEntity<String> publicarDocumento(@RequestBody DocumentoDTO documentoDTO) {
+        documentoService.publicarDocumento(documentoDTO);
+        return ResponseEntity.ok("Documento publicado con éxito.");
+    }
+
+    @GetMapping("/descargar/{documentoId}")
+    public ResponseEntity<DocumentoModel> descargarDocumento(@PathVariable String documentoId, @RequestParam String usuarioId) {
+        DocumentoModel documento = documentoService.descargarDocumento(documentoId, usuarioId);
+        return ResponseEntity.ok(documento);
     }
 }

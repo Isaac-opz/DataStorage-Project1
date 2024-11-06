@@ -6,7 +6,6 @@ import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ public class ComentarioModel {
     private ObjectId idUsuario;
     private String comentario;
     private Date fechaComentario;
-    private List<ReplicaModel> replica;
+    private List<ReplicaModel> replica; // Lista de réplicas embebidas
 
     public String getIdAsString() {
         return id != null ? id.toHexString() : null;
