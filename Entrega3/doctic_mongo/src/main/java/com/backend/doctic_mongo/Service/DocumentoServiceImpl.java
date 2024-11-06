@@ -1,6 +1,7 @@
 package com.backend.doctic_mongo.Service;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,10 +22,55 @@ public class DocumentoServiceImpl implements IDocumentoService {
     public void publicarDocumento(DocumentoDTO documentoDTO) {
         try {
             DocumentoModel documento = new DocumentoModel();
-            // Mapeo de campos correctos en DocumentoModel
-            documento.setNombreDocumento(documentoDTO.getTitulo()); // Cambiado a setNombreDocumento
-            documento.setDescripcion(documentoDTO.getContenido());  // Cambiado a setDescripcion
+            documento.setNombreDocumento(documentoDTO.getNombreDocumento());
+            documento.setDescripcion(documentoDTO.getDescripcion());
             documento.setFechaPublicacion(documentoDTO.getFechaPublicacion());
+            documento.setUrl(documentoDTO.getUrl());
+            documento.setVisibilidad(documentoDTO.getVisibilidad());
+            documento.setValoracion(documentoDTO.getValoracion());
+            documento.setNumDescargas(documentoDTO.getNumDescargas());
+            documento.setNumVistas(documentoDTO.getNumVistas());
+            documento.setNumComentarios(documentoDTO.getNumComentarios());
+
+            // Mapeo de Categoria
+            DocumentoModel.Categoria categoria = new DocumentoModel.Categoria();
+            categoria.setIdCategoria(documentoDTO.getIdCategoria().getIdCategoria());
+            categoria.setCategoria(documentoDTO.getIdCategoria().getCategoria());
+            categoria.setIdMetacategoria(documentoDTO.getIdCategoria().getIdMetacategoria());
+            documento.setIdCategoria(categoria);
+
+            // Mapeo de Autores
+            documento.setAutores(documentoDTO.getAutores().stream().map(autorDTO -> {
+                DocumentoModel.AutorModel autor = new DocumentoModel.AutorModel();
+                autor.setIdUsuario(new ObjectId(autorDTO.getIdUsuario()));
+                autor.setPublico(autorDTO.getPublico());
+                return autor;
+            }).collect(Collectors.toList()));
+
+            // Mapeo de Valoraciones
+            documento.setValoraciones(documentoDTO.getValoraciones().stream().map(valoracionDTO -> {
+                DocumentoModel.ValoracionModel valoracion = new DocumentoModel.ValoracionModel();
+                valoracion.setEstrellas(valoracionDTO.getEstrellas());
+                valoracion.setFechaValoracion(valoracionDTO.getFechaValoracion());
+                valoracion.setIdUsuario(new ObjectId(valoracionDTO.getIdUsuario()));
+                return valoracion;
+            }).collect(Collectors.toList()));
+
+            // Mapeo de Descargas
+            documento.setDescargas(documentoDTO.getDescargas().stream().map(descargaDTO -> {
+                DocumentoModel.DescargaModel descarga = new DocumentoModel.DescargaModel();
+                descarga.setFechaHora(descargaDTO.getFechaHora());
+                descarga.setIdUsuario(new ObjectId(descargaDTO.getIdUsuario()));
+                return descarga;
+            }).collect(Collectors.toList()));
+
+            // Mapeo de Vistas
+            documento.setVistas(documentoDTO.getVistas().stream().map(vistaDTO -> {
+                DocumentoModel.VistaModel vista = new DocumentoModel.VistaModel();
+                vista.setFechaHora(vistaDTO.getFechaHora());
+                vista.setIdUsuario(new ObjectId(vistaDTO.getIdUsuario()));
+                return vista;
+            }).collect(Collectors.toList()));
 
             documentoRepository.save(documento);
         } catch (Exception e) {
