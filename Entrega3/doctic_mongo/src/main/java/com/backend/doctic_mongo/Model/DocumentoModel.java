@@ -39,7 +39,15 @@ public class DocumentoModel {
     private List<ValoracionModel> valoraciones;
     private List<DescargaModel> descargas;
     private List<VistaModel> vistas;
-
+    
+     // Método para cambiar la visibilidad de un documento
+     public void cambiarVisibilidad(String nuevaVisibilidad) {
+        if ("publico".equalsIgnoreCase(nuevaVisibilidad) || "privado".equalsIgnoreCase(nuevaVisibilidad)) {
+            this.visibilidad = nuevaVisibilidad;
+        } else {
+            throw new IllegalArgumentException("Visibilidad no válida. Solo 'publico' o 'privado' son permitidos.");
+        }
+    }
     // Getters y Setters para todos los campos
 
     public ObjectId getId() {

@@ -115,4 +115,22 @@ public class DocumentoServiceImpl implements IDocumentoService {
             throw new CustomException("Error al descargar el documento: " + e.getMessage());
         }
     }
+
+    @Override
+    public void actualizarVisibilidad(String documentoId, String nuevaVisibilidad) {
+        try {
+            ObjectId id = new ObjectId(documentoId); // Conversión de String a ObjectId
+            Optional<DocumentoModel> documentoOpt = documentoRepository.findById(id);
+
+            if (documentoOpt.isPresent()) {
+                DocumentoModel documento = documentoOpt.get();
+                documento.setVisibilidad(nuevaVisibilidad); // Actualizamos la visibilidad
+                documentoRepository.save(documento); // Guardamos el documento con la nueva visibilidad
+            } else {
+                throw new CustomException("Documento no encontrado con ID: " + documentoId);
+            }
+        } catch (Exception e) {
+            throw new CustomException("Error al actualizar la visibilidad del documento: " + e.getMessage());
+        }
+    }
 }
