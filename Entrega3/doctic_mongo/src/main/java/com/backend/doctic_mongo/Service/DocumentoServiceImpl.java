@@ -6,11 +6,11 @@ import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.backend.doctic_mongo.DTO.DocumentoDTO;
 import com.backend.doctic_mongo.Exceptions.CustomException;
 import com.backend.doctic_mongo.Model.DocumentoModel;
 import com.backend.doctic_mongo.Repository.IDocumentoRepository;
+import com.backend.doctic_mongo.Repository.IUsuarioRepository;
 
 @Service
 public class DocumentoServiceImpl implements IDocumentoService {
@@ -18,7 +18,10 @@ public class DocumentoServiceImpl implements IDocumentoService {
     @Autowired
     private IDocumentoRepository documentoRepository;
 
-    @Override
+    @Autowired
+    private IUsuarioRepository usuarioRepository;
+
+   @Override
     public void publicarDocumento(DocumentoDTO documentoDTO) {
         try {
             DocumentoModel documento = new DocumentoModel();
@@ -81,14 +84,33 @@ public class DocumentoServiceImpl implements IDocumentoService {
     @Override
     public DocumentoModel descargarDocumento(String documentoId, String usuarioId) {
         try {
-            ObjectId id = new ObjectId(documentoId); // Conversión de String a ObjectId
-            Optional<DocumentoModel> documentoOpt = documentoRepository.findById(id);
+            // Verificar que el documento exista
+            ObjectId docId = new ObjectId(documentoId);
+            Optional<DocumentoModel> documentoOpt = documentoRepository.findById(docId);
 
-            if (documentoOpt.isPresent()) {
-                return documentoOpt.get();
-            } else {
+            if (!documentoOpt.isPresent()) {
                 throw new CustomException("Documento no encontrado con ID: " + documentoId);
             }
+
+            DocumentoModel documento = documentoOpt.get();
+
+            // Verificar que el usuario exista
+            ObjectId userId = new ObjectId(usuarioId);
+            if (!usuarioRepository.existsById(userId)) {
+                throw new CustomException("Usuario no encontrado con ID: " + usuarioId);
+            }
+
+            // Validar que el documento sea público
+            if (!"publico".equalsIgnoreCase(documento.getVisibilidad())) {
+                throw new CustomException("El documento no está disponible para descarga porque es privado.");
+            }
+
+            // Incrementar el contador de descargas y actualizar el documento
+            documento.setNumDescargas(documento.getNumDescargas() + 1);
+            documentoRepository.save(documento);
+
+            return documento;
+
         } catch (Exception e) {
             throw new CustomException("Error al descargar el documento: " + e.getMessage());
         }

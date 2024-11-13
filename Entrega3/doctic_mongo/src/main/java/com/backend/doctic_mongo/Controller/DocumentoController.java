@@ -23,6 +23,7 @@ public class DocumentoController {
     @Autowired
     private IDocumentoService documentoService;
 
+    // Endpoint para publicar un documento
     @PostMapping("/publicar")
     public ResponseEntity<String> publicarDocumento(@RequestBody DocumentoDTO documentoDTO) {
         try {
@@ -35,13 +36,17 @@ public class DocumentoController {
         }
     }
 
+    // Endpoint para descargar un documento
     @GetMapping("/descargar/{documentoId}")
     public ResponseEntity<?> descargarDocumento(@PathVariable String documentoId, @RequestParam String usuarioId) {
         try {
+            // Llama al servicio para procesar la descarga con las validaciones
             DocumentoModel documento = documentoService.descargarDocumento(documentoId, usuarioId);
             return ResponseEntity.ok(documento);
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); // Responde con 403 si el documento es privado
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al descargar el documento.");
         }
