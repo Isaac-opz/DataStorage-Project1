@@ -100,9 +100,9 @@ public class DocumentoServiceImpl implements IDocumentoService {
                 throw new CustomException("Usuario no encontrado con ID: " + usuarioId);
             }
 
-            // Validar que el documento sea público
+            // Validar que el documento sea público. Si es privado, lanzar IllegalArgumentException
             if (!"publico".equalsIgnoreCase(documento.getVisibilidad())) {
-                throw new CustomException("El documento no está disponible para descarga porque es privado.");
+                throw new IllegalArgumentException("El documento no está disponible para descarga porque es privado.");
             }
 
             // Incrementar el contador de descargas y actualizar el documento
@@ -111,10 +111,13 @@ public class DocumentoServiceImpl implements IDocumentoService {
 
             return documento;
 
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             throw new CustomException("Error al descargar el documento: " + e.getMessage());
         }
     }
+
 
     @Override
     public void actualizarVisibilidad(String documentoId, String nuevaVisibilidad) {

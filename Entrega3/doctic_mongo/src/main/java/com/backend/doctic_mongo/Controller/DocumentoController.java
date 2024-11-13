@@ -38,7 +38,7 @@ public class DocumentoController {
     }
 
     // Endpoint para descargar un documento
-    @GetMapping("/descargar/{documentoId}")
+    @GetMapping("/descargar/{documentoId}") 
     public ResponseEntity<?> descargarDocumento(@PathVariable String documentoId, @RequestParam String usuarioId) {
         try {
             // Llama al servicio para procesar la descarga con las validaciones
@@ -47,11 +47,12 @@ public class DocumentoController {
         } catch (CustomException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage()); // Responde con 403 si el documento es privado
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al descargar el documento.");
         }
     }
+
     @PutMapping("/actualizarVisibilidad/{documentoId}")
     public ResponseEntity<String> actualizarVisibilidad(@PathVariable String documentoId, @RequestParam String nuevaVisibilidad) {
         try {
