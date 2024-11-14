@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import com.backend.doctic_mongo.DTO.DocumentoDTO;
 import com.backend.doctic_mongo.Exceptions.CustomException;
 import com.backend.doctic_mongo.Model.DocumentoModel;
@@ -122,13 +123,13 @@ public class DocumentoServiceImpl implements IDocumentoService {
     @Override
     public void actualizarVisibilidad(String documentoId, String nuevaVisibilidad) {
         try {
-            ObjectId id = new ObjectId(documentoId); // Conversión de String a ObjectId
+            ObjectId id = new ObjectId(documentoId);
             Optional<DocumentoModel> documentoOpt = documentoRepository.findById(id);
 
             if (documentoOpt.isPresent()) {
                 DocumentoModel documento = documentoOpt.get();
-                documento.setVisibilidad(nuevaVisibilidad); // Actualizamos la visibilidad
-                documentoRepository.save(documento); // Guardamos el documento con la nueva visibilidad
+                documento.setVisibilidad(nuevaVisibilidad);
+                documentoRepository.save(documento);
             } else {
                 throw new CustomException("Documento no encontrado con ID: " + documentoId);
             }
@@ -136,4 +137,86 @@ public class DocumentoServiceImpl implements IDocumentoService {
             throw new CustomException("Error al actualizar la visibilidad del documento: " + e.getMessage());
         }
     }
+
+    @Override
+    public void actualizarDocumento(String documentoId, DocumentoDTO documentoDTO) {
+        try {
+            // Verificar que el documento exista en la base de datos
+            ObjectId docId = new ObjectId(documentoId);
+            Optional<DocumentoModel> documentoOpt = documentoRepository.findById(docId);
+            
+            if (!documentoOpt.isPresent()) {
+                throw new CustomException("Documento no encontrado con ID: " + documentoId);
+            }
+
+            DocumentoModel documento = documentoOpt.get();
+
+            // Actualizar solo los campos permitidos de acuerdo al DTO
+            documento.setNombreDocumento(documentoDTO.getNombreDocumento());
+            documento.setDescripcion(documentoDTO.getDescripcion());
+            documento.setFechaPublicacion(documentoDTO.getFechaPublicacion());
+            documento.setUrl(documentoDTO.getUrl());
+            documento.setVisibilidad(documentoDTO.getVisibilidad());
+            documento.setValoracion(documentoDTO.getValoracion());
+            documento.setNumDescargas(documentoDTO.getNumDescargas());
+            documento.setNumVistas(documentoDTO.getNumVistas());
+            documento.setNumComentarios(documentoDTO.getNumComentarios());
+
+            // Actualizar el campo de categoría si está presente
+            if (documentoDTO.getIdCategoria() != null) {
+                DocumentoModel.Categoria categoria = new DocumentoModel.Categoria();
+                categoria.setIdCategoria(documentoDTO.getIdCategoria().getIdCategoria());
+                categoria.setCategoria(documentoDTO.getIdCategoria().getCategoria());
+                categoria.setIdMetacategoria(documentoDTO.getIdCategoria().getIdMetacategoria());
+                documento.setIdCategoria(categoria);
+            }
+
+            // Actualizar la lista de autores si está presente
+            if (documentoDTO.getAutores() != null) {
+                documento.setAutores(documentoDTO.getAutores().stream().map(autorDTO -> {
+                    DocumentoModel.AutorModel autor = new DocumentoModel.AutorModel();
+                    autor.setIdUsuario(new ObjectId(autorDTO.getIdUsuario()));
+                    autor.setPublico(autorDTO.getPublico());
+                    return autor;
+                }).collect(Collectors.toList()));
+            }
+
+            // Actualizar la lista de valoraciones si está presente
+            if (documentoDTO.getValoraciones() != null) {
+                documento.setValoraciones(documentoDTO.getValoraciones().stream().map(valoracionDTO -> {
+                    DocumentoModel.ValoracionModel valoracion = new DocumentoModel.ValoracionModel();
+                    valoracion.setEstrellas(valoracionDTO.getEstrellas());
+                    valoracion.setFechaValoracion(valoracionDTO.getFechaValoracion());
+                    valoracion.setIdUsuario(new ObjectId(valoracionDTO.getIdUsuario()));
+                    return valoracion;
+                }).collect(Collectors.toList()));
+            }
+
+            // Actualizar la lista de descargas si está presente
+            if (documentoDTO.getDescargas() != null) {
+                documento.setDescargas(documentoDTO.getDescargas().stream().map(descargaDTO -> {
+                    DocumentoModel.DescargaModel descarga = new DocumentoModel.DescargaModel();
+                    descarga.setFechaHora(descargaDTO.getFechaHora());
+                    descarga.setIdUsuario(new ObjectId(descargaDTO.getIdUsuario()));
+                    return descarga;
+                }).collect(Collectors.toList()));
+            }
+
+            // Actualizar la lista de vistas si está presente
+            if (documentoDTO.getVistas() != null) {
+                documento.setVistas(documentoDTO.getVistas().stream().map(vistaDTO -> {
+                    DocumentoModel.VistaModel vista = new DocumentoModel.VistaModel();
+                    vista.setFechaHora(vistaDTO.getFechaHora());
+                    vista.setIdUsuario(new ObjectId(vistaDTO.getIdUsuario()));
+                    return vista;
+                }).collect(Collectors.toList()));
+            }
+
+            documentoRepository.save(documento);
+
+        } catch (Exception e) {
+            throw new CustomException("Error al actualizar el documento: " + e.getMessage());
+        }
+    }
+
 }

@@ -41,7 +41,6 @@ public class DocumentoController {
     @GetMapping("/descargar/{documentoId}") 
     public ResponseEntity<?> descargarDocumento(@PathVariable String documentoId, @RequestParam String usuarioId) {
         try {
-            // Llama al servicio para procesar la descarga con las validaciones
             DocumentoModel documento = documentoService.descargarDocumento(documentoId, usuarioId);
             return ResponseEntity.ok(documento);
         } catch (CustomException e) {
@@ -64,5 +63,18 @@ public class DocumentoController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar la visibilidad del documento.");
         }
     }
+
+    @PutMapping("/actualizar/{documentoId}")
+    public ResponseEntity<String> actualizarDocumento(@PathVariable String documentoId, @RequestBody DocumentoDTO documentoDTO) {
+        try {
+            documentoService.actualizarDocumento(documentoId, documentoDTO);
+            return ResponseEntity.ok("Documento actualizado con éxito.");
+        } catch (CustomException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al actualizar el documento.");
+        }
+    }
+
 
 }

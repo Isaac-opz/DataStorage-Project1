@@ -9,6 +9,7 @@ public interface IDocumentoService {
 
     DocumentoModel descargarDocumento(String documentoId, String usuarioId) throws CustomException;
 
-     // Método para actualizar la visibilidad del documento
+    void actualizarDocumento(String documentoId, DocumentoDTO documentoDTO) throws CustomException;
+
      void actualizarVisibilidad(String documentoId, String nuevaVisibilidad) throws CustomException;
 }
